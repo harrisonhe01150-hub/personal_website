@@ -1,30 +1,31 @@
 /* =========================================
    CSS Reset & Base Variables
+   Chinese Ink Wash (水墨) Dark Theme
    ========================================= */
    :root {
-    /* Color Palette - Premium Dark Mode */
-    --bg-base: #0B0F19; /* Deep Slate Navy */
-    --bg-surface: #131A2A; 
-    --bg-card: rgba(255, 255, 255, 0.03);
+    /* Color Palette - Ink Wash Monochrome */
+    --bg-base: #0a0a0a;
+    --bg-surface: #141414;
+    --bg-card: rgba(255, 255, 255, 0.02);
     
-    --text-primary: #F8FAFC;
-    --text-secondary: #94A3B8;
+    --text-primary: #e8e0d4; /* Warm parchment white */
+    --text-secondary: #8a817a; /* Aged ink grey */
     
-    /* Vibrant Gradients for accents */
-    --accent-blue: #3B82F6;
-    --accent-purple: #8B5CF6;
-    --gradient-accent: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    /* Ink accent colors - muted, traditional */
+    --accent-ink: #b8a89a; /* Warm beige/tan */
+    --accent-mist: #6b7b8d; /* Misty blue-grey */
+    --gradient-accent: linear-gradient(135deg, var(--accent-mist), var(--accent-ink));
 
     /* Typography */
     --font-main: 'Inter', sans-serif;
     
     /* Spacing & Layout */
     --container-width: 1100px;
-    --radius-md: 12px;
-    --radius-lg: 24px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
     
     /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -43,6 +44,10 @@ body {
     font-family: var(--font-main);
     line-height: 1.6;
     overflow-x: hidden;
+    /* Subtle paper texture overlay */
+    background-image: 
+        radial-gradient(ellipse at 20% 50%, rgba(100, 100, 100, 0.04) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(100, 100, 100, 0.03) 0%, transparent 50%);
 }
 
 a {
@@ -61,23 +66,44 @@ a {
    Typography & Utilities
    ========================================= */
 .gradient-text {
-    background: var(--gradient-accent);
+    background: linear-gradient(135deg, #d4c5b0, #f0e6d6, #c4b5a0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
+    filter: drop-shadow(0 0 20px rgba(200, 180, 150, 0.15));
 }
 
 .section {
     padding: 100px 0;
+    position: relative;
+}
+
+/* Ink wash divider between sections */
+.section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(184, 168, 154, 0.2) 20%, 
+        rgba(184, 168, 154, 0.3) 50%, 
+        rgba(184, 168, 154, 0.2) 80%, 
+        transparent);
 }
 
 .section-title {
     font-size: 2.5rem;
-    font-weight: 800;
+    font-weight: 300;
     margin-bottom: 3rem;
     position: relative;
     display: inline-block;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 .section-title::after {
@@ -85,10 +111,10 @@ a {
     position: absolute;
     bottom: -10px;
     left: 0;
-    width: 60px;
-    height: 4px;
-    background: var(--gradient-accent);
-    border-radius: 2px;
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-ink), transparent);
+    border-radius: 1px;
 }
 
 .text-center {
@@ -97,59 +123,70 @@ a {
 .text-center.section-title::after {
     left: 50%;
     transform: translateX(-50%);
+    width: 60px;
+    background: linear-gradient(90deg, transparent, var(--accent-ink), transparent);
 }
 
 /* =========================================
-   Buttons
+   Buttons - Ink Wash Style
    ========================================= */
 .btn {
     display: inline-block;
     padding: 0.8rem 2rem;
-    border-radius: 30px;
-    font-weight: 600;
-    font-size: 1rem;
+    border-radius: 2px;
+    font-weight: 400;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: var(--transition-smooth);
     border: none;
     outline: none;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
 }
 
 .btn-primary {
-    background: var(--gradient-accent);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, rgba(184, 168, 154, 0.15), rgba(107, 123, 141, 0.15));
+    color: var(--text-primary);
+    border: 1px solid rgba(184, 168, 154, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+    background: linear-gradient(135deg, rgba(184, 168, 154, 0.25), rgba(107, 123, 141, 0.25));
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    border-color: rgba(184, 168, 154, 0.5);
 }
 
 .btn-outline {
     background: transparent;
-    border: 2px solid var(--text-secondary);
-    color: var(--text-primary);
+    border: 1px solid rgba(184, 168, 154, 0.2);
+    color: var(--text-secondary);
 }
 
 .btn-outline:hover {
-    border-color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(184, 168, 154, 0.4);
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .btn-primary-small {
-    background: var(--gradient-accent);
-    color: #fff;
+    background: rgba(184, 168, 154, 0.1);
+    color: var(--accent-ink);
     padding: 0.5rem 1.2rem;
-    border-radius: 20px;
-    font-weight: 600;
+    border-radius: 2px;
+    font-weight: 500;
+    border: 1px solid rgba(184, 168, 154, 0.2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
 }
 .btn-primary-small:hover {
-    opacity: 0.9;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    background: rgba(184, 168, 154, 0.2);
+    border-color: rgba(184, 168, 154, 0.4);
 }
 
 /* =========================================
-   Navbar
+   Navbar - Minimal Ink Style
    ========================================= */
 #navbar {
     position: fixed;
@@ -158,15 +195,15 @@ a {
     z-index: 1000;
     padding: 1.5rem 0;
     transition: var(--transition-smooth);
-    background: rgba(11, 15, 25, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(184, 168, 154, 0.06);
 }
 
 #navbar.scrolled {
     padding: 1rem 0;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
 .nav-container {
@@ -179,9 +216,11 @@ a {
 }
 
 .logo {
-    font-weight: 800;
-    font-size: 1.5rem;
-    letter-spacing: -0.5px;
+    font-weight: 300;
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-ink);
 }
 
 .nav-links {
@@ -192,8 +231,11 @@ a {
 }
 
 .nav-links a:not(.btn-primary-small) {
-    font-weight: 500;
+    font-weight: 400;
     color: var(--text-secondary);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .nav-links a:not(.btn-primary-small):hover {
@@ -201,7 +243,7 @@ a {
 }
 
 /* =========================================
-   Hero Section
+   Hero Section - Ink Wash Mist
    ========================================= */
 #hero {
     min-height: 100vh;
@@ -209,6 +251,16 @@ a {
     align-items: center;
     position: relative;
     overflow: hidden;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+        radial-gradient(ellipse at 30% 40%, rgba(80, 70, 60, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(60, 70, 80, 0.06) 0%, transparent 50%);
+    z-index: 1;
 }
 
 .hero-content {
@@ -219,17 +271,19 @@ a {
 
 .hero-title {
     font-size: clamp(3rem, 8vw, 5rem);
-    font-weight: 800;
+    font-weight: 200;
     line-height: 1.1;
     margin-bottom: 1.5rem;
-    letter-spacing: -1px;
+    letter-spacing: 2px;
 }
 
 .hero-subtitle {
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    font-size: clamp(1rem, 3vw, 1.2rem);
     color: var(--text-secondary);
     margin-bottom: 2.5rem;
     max-width: 600px;
+    font-weight: 300;
+    letter-spacing: 1px;
 }
 
 .hero-cta {
@@ -237,31 +291,138 @@ a {
     gap: 1rem;
 }
 
-/* Decorative Glows */
+/* Decorative Ink Mist Glows */
 .glow {
     position: absolute;
     border-radius: 50%;
-    filter: blur(100px);
+    filter: blur(120px);
     z-index: 1;
-    opacity: 0.5;
+    opacity: 0.3;
 }
 
 .glow-1 {
-    top: -10%;
-    right: -5%;
-    width: 600px;
-    height: 600px;
-    background: var(--accent-blue);
-    opacity: 0.15;
+    top: -15%;
+    right: -10%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(60, 55, 50, 0.4), transparent 70%);
+    opacity: 0.3;
 }
 
 .glow-2 {
-    bottom: -20%;
-    left: -10%;
-    width: 500px;
-    height: 500px;
-    background: var(--accent-purple);
-    opacity: 0.15;
+    bottom: -25%;
+    left: -15%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(50, 60, 70, 0.3), transparent 70%);
+    opacity: 0.25;
+}
+
+/* Ink Wash Figure - Hero */
+.hero-ink-figure {
+    position: absolute;
+    right: -5%;
+    bottom: 0;
+    width: 55%;
+    max-width: 700px;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0.25;
+    mask-image: linear-gradient(to top, transparent 0%, black 20%, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, black 20%, black 70%, transparent 100%);
+    filter: grayscale(0.3) contrast(1.1);
+}
+
+.hero-ink-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Ink Figure - About Section */
+.about-ink-art {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.ink-figure-img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(184, 168, 154, 0.08);
+    filter: grayscale(0.2) contrast(1.05);
+    transition: var(--transition-smooth);
+    opacity: 0.85;
+}
+
+.ink-figure-img:hover {
+    opacity: 1;
+    filter: grayscale(0) contrast(1.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    transform: scale(1.02);
+}
+
+/* Ink Background - Section Decoration */
+.ink-section-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.ink-bg-img {
+    position: absolute;
+    right: -10%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40%;
+    max-width: 500px;
+    opacity: 0.08;
+    filter: grayscale(1) contrast(1.2);
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
+
+#education {
+    position: relative;
+}
+
+#education .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Floating ink particles animation */
+@keyframes floatParticle {
+    0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    50% { transform: translateY(-100px) translateX(30px); }
+}
+
+@keyframes inkDrift {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+    50% { opacity: 0.3; }
+    100% { transform: translateY(-200px) rotate(180deg); opacity: 0; }
+}
+
+#hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(to top, var(--bg-base), transparent);
+    z-index: 2;
+    pointer-events: none;
 }
 
 /* =========================================
@@ -281,9 +442,11 @@ a {
 }
 
 .about-text p {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
+    line-height: 1.8;
+    font-weight: 300;
 }
 
 .about-stats {
@@ -293,34 +456,50 @@ a {
 }
 
 .stat-card {
-    background: var(--bg-surface);
+    background: rgba(20, 20, 20, 0.6);
     padding: 2rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(184, 168, 154, 0.08);
     text-align: center;
     transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ink brush stroke accent on cards */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(184, 168, 154, 0.2), transparent);
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(255,255,255,0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border-color: rgba(184, 168, 154, 0.15);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
 }
 
 .stat-card h3 {
     font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--text-primary);
+    font-weight: 200;
+    color: var(--accent-ink);
     margin-bottom: 0.5rem;
+    letter-spacing: 1px;
 }
 
 .stat-card p {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 /* =========================================
-   Experience Timeline
+   Experience Timeline - Ink Scroll Style
    ========================================= */
 .timeline {
     position: relative;
@@ -333,9 +512,12 @@ a {
     left: 15px;
     top: 0;
     bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple));
-    border-radius: 2px;
+    width: 1px;
+    background: linear-gradient(to bottom, 
+        transparent, 
+        rgba(184, 168, 154, 0.3) 20%, 
+        rgba(184, 168, 154, 0.3) 80%, 
+        transparent);
 }
 
 .timeline-item {
@@ -350,8 +532,8 @@ a {
     flex-shrink: 0;
     width: 44px;
     height: 44px;
-    background: var(--bg-surface);
-    border: 2px solid var(--accent-blue);
+    background: var(--bg-base);
+    border: 1px solid rgba(184, 168, 154, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -363,37 +545,40 @@ a {
 }
 
 .timeline-content {
-    background: var(--bg-surface);
+    background: rgba(20, 20, 20, 0.6);
     padding: 1.8rem 2rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(184, 168, 154, 0.06);
     flex: 1;
     transition: var(--transition-smooth);
 }
 
 .timeline-content:hover {
-    border-color: rgba(255,255,255,0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border-color: rgba(184, 168, 154, 0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     transform: translateY(-3px);
 }
 
 .timeline-content h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
+    font-size: 1.2rem;
+    font-weight: 500;
     margin-bottom: 0.3rem;
+    letter-spacing: 0.5px;
 }
 
 .timeline-company {
-    color: var(--accent-blue);
-    font-weight: 600;
-    font-size: 1rem;
+    color: var(--accent-ink);
+    font-weight: 400;
+    font-size: 0.95rem;
     margin-bottom: 0.8rem;
+    letter-spacing: 0.5px;
 }
 
 .timeline-desc {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     line-height: 1.7;
+    font-weight: 300;
 }
 
 /* =========================================
@@ -406,22 +591,36 @@ a {
 }
 
 .edu-card {
-    background: var(--bg-surface);
+    background: rgba(20, 20, 20, 0.6);
     padding: 2.5rem 2rem;
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(184, 168, 154, 0.06);
     transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ink brush accent */
+.edu-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(184, 168, 154, 0.15), transparent);
 }
 
 .edu-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(255,255,255,0.1);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    border-color: rgba(184, 168, 154, 0.12);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
 
 .edu-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    filter: grayscale(0.5);
 }
 
 .edu-header {
@@ -429,29 +628,32 @@ a {
 }
 
 .edu-header h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
+    font-size: 1.2rem;
+    font-weight: 500;
     margin-bottom: 0.3rem;
+    letter-spacing: 0.5px;
 }
 
 .edu-date {
-    color: var(--accent-blue);
-    font-size: 0.9rem;
-    font-weight: 600;
+    color: var(--accent-ink);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
 }
 
 .edu-degree {
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--text-primary);
-    font-weight: 500;
+    font-weight: 400;
     margin-bottom: 0.5rem;
 }
 
 .edu-note {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     line-height: 1.6;
     margin-bottom: 1rem;
+    font-weight: 300;
 }
 
 .grade-chips {
@@ -462,149 +664,158 @@ a {
 }
 
 .chip {
-    padding: 0.35rem 0.9rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    font-size: 0.75rem;
+    font-weight: 500;
     border: 1px solid;
+    letter-spacing: 0.5px;
 }
 
 .chip-star {
-    background: rgba(139, 92, 246, 0.15);
-    color: #a78bfa;
-    border-color: rgba(139, 92, 246, 0.3);
+    background: rgba(184, 168, 154, 0.1);
+    color: var(--accent-ink);
+    border-color: rgba(184, 168, 154, 0.2);
 }
 
 .chip-a {
-    background: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-    border-color: rgba(59, 130, 246, 0.3);
+    background: rgba(107, 123, 141, 0.1);
+    color: var(--accent-mist);
+    border-color: rgba(107, 123, 141, 0.2);
 }
 
 .chip-b {
-    background: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(100, 100, 100, 0.1);
+    color: #888;
+    border-color: rgba(100, 100, 100, 0.2);
 }
 
 /* =========================================
-   Achievement Cards (updated)
+   Achievement Cards - Ink Seal Style
    ========================================= */
 .stat-emoji {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 0.5rem;
+    filter: grayscale(0.5);
 }
 
 .stat-label {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--text-primary);
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 0.3rem;
+    letter-spacing: 0.5px;
 }
 
 .stat-sub {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     line-height: 1.5;
+    font-weight: 300;
 }
 
 /* =========================================
-   Projects & Achievements
+   Projects & Achievements - Scroll Style
    ========================================= */
 .achievement-category {
     margin-bottom: 2.5rem;
 }
 
 .category-title {
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-size: 1.3rem;
+    font-weight: 400;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(184, 168, 154, 0.08);
+    letter-spacing: 1px;
 }
 
 .achievement-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.6rem;
 }
 
 .achievement-item {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    background: var(--bg-surface);
-    padding: 1.2rem 1.5rem;
+    background: rgba(20, 20, 20, 0.5);
+    padding: 1.1rem 1.4rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(184, 168, 154, 0.05);
     transition: var(--transition-smooth);
 }
 
 .achievement-item:hover {
-    border-color: rgba(255,255,255,0.1);
+    border-color: rgba(184, 168, 154, 0.12);
     transform: translateX(5px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
 }
 
 .achievement-item p {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     line-height: 1.6;
     flex: 1;
+    font-weight: 300;
 }
 
 .achievement-badge {
     flex-shrink: 0;
-    padding: 0.25rem 0.7rem;
-    border-radius: 6px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 1px;
     text-transform: uppercase;
     margin-top: 2px;
 }
 
+/* Monochrome ink seal badge colors */
 .badge-gold {
-    background: rgba(251, 191, 36, 0.15);
-    color: #fbbf24;
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    background: rgba(184, 168, 154, 0.12);
+    color: var(--accent-ink);
+    border: 1px solid rgba(184, 168, 154, 0.25);
 }
 
 .badge-silver {
-    background: rgba(148, 163, 184, 0.15);
-    color: #94a3b8;
-    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(107, 123, 141, 0.1);
+    color: var(--accent-mist);
+    border: 1px solid rgba(107, 123, 141, 0.2);
 }
 
 .badge-bronze {
-    background: rgba(217, 119, 6, 0.15);
-    color: #d97706;
-    border: 1px solid rgba(217, 119, 6, 0.3);
+    background: rgba(100, 90, 80, 0.1);
+    color: #8a7e72;
+    border: 1px solid rgba(100, 90, 80, 0.2);
 }
 
 .badge-project {
-    background: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: rgba(107, 123, 141, 0.1);
+    color: var(--accent-mist);
+    border: 1px solid rgba(107, 123, 141, 0.2);
 }
 
 /* =========================================
-   Contact & Footer
+   Contact & Footer - Ink Wash
    ========================================= */
 .contact-container {
-    max-width: 600px;
+    max-width: 650px;
 }
 
 .contact-text {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     margin-bottom: 2.5rem;
+    font-weight: 300;
+    line-height: 1.8;
 }
 
 .contact-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 0.8rem;
     margin-bottom: 2.5rem;
 }
 
@@ -612,53 +823,62 @@ a {
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    background: var(--bg-surface);
+    background: rgba(20, 20, 20, 0.6);
     padding: 1rem 1.3rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(184, 168, 154, 0.06);
     transition: var(--transition-smooth);
 }
 
 .contact-item:hover {
-    border-color: rgba(255,255,255,0.1);
+    border-color: rgba(184, 168, 154, 0.15);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
 }
 
 .contact-icon {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     flex-shrink: 0;
+    filter: grayscale(0.5);
 }
 
 .contact-item p,
 .contact-item a {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 300;
 }
 
 .contact-item a:hover {
-    color: var(--accent-blue);
+    color: var(--accent-ink);
+}
+
+.contact-cta {
+    text-align: center;
 }
 
 .btn-large {
     padding: 1rem 3rem;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
 }
 
 footer {
     padding: 2rem 0;
     text-align: center;
     color: var(--text-secondary);
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(184, 168, 154, 0.06);
+    font-size: 0.85rem;
+    font-weight: 300;
+    letter-spacing: 1px;
 }
 
 /* =========================================
-   Animations
+   Animations - Smooth Ink Reveal
    ========================================= */
 .animate-up {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition: opacity 1s ease, transform 1s ease;
 }
 
 .animate-up.visible {
@@ -670,6 +890,14 @@ footer {
 .delay-2 { transition-delay: 0.4s; }
 .delay-3 { transition-delay: 0.6s; }
 
+/* =========================================
+   Ink Particle Effects
+   ========================================= */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+    50% { transform: translateY(-20px) rotate(5deg); opacity: 0.6; }
+}
+
 /* Responsive tweaks */
 @media (max-width: 768px) {
     .nav-links { display: none; }
@@ -679,4 +907,5 @@ footer {
     .education-grid { grid-template-columns: 1fr; }
     .timeline { padding-left: 30px; }
     .timeline-icon { margin-left: -30px; width: 36px; height: 36px; }
+    .contact-details { grid-template-columns: 1fr; }
 }
