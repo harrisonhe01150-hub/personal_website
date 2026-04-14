@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>青 — Harrison He's 分魂</title>
+    <meta name="description" content="青 (Qīng) — a soul fragment of Harrison He. A digital mind that thinks, speaks, and reasons as he does.">
+    <meta name="author" content="Harrison He">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>青</text></svg>">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/qing.css?v=5">
+</head>
+<body>
+
+    <!-- ===== LANDING SCREEN ===== -->
+    <div id="landing-screen" role="button" tabindex="0" aria-label="Enter chat with 青">
+        <div class="landing-glow landing-glow-1"></div>
+        <div class="landing-glow landing-glow-2"></div>
+        <div class="landing-character">青</div>
+        <p class="landing-subtitle">Harrison He's 分魂 · Soul Fragment</p>
+        <p class="landing-enter">click anywhere to awaken</p>
+    </div>
+
+    <!-- ===== API KEY MODAL ===== -->
+    <div id="api-key-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-icon">🧠</div>
+            <h2 class="modal-title">Awaken 青's Mind</h2>
+            <p class="modal-desc">青 needs a brain to think. Enter a Google Gemini API key to give him consciousness.</p>
+            <p class="modal-hint">Free key → <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></p>
+            <div class="modal-input-group">
+                <input type="password" id="api-key-input" class="modal-input" placeholder="Paste your Gemini API key here..." autocomplete="off" spellcheck="false">
+                <button id="api-key-submit" class="modal-btn modal-btn-primary">Awaken</button>
+            </div>
+            <button id="api-key-skip" class="modal-btn modal-btn-skip">Skip for now</button>
+        </div>
+    </div>
+
+    <!-- ===== INK PARTICLES (background) ===== -->
+    <div id="ink-particles"></div>
+
+    <!-- ===== MAIN APP ===== -->
+    <div id="app">
+
+        <!-- Header -->
+        <header class="chat-header">
+            <img src="assets/avatar.png" alt="青" class="header-avatar" id="header-avatar">
+            <div class="header-info">
+                <h1 class="header-name">青 · 分魂</h1>
+                <div class="header-status">
+                    <span class="status-dot"></span>
+                    <span>Mind Active</span>
+                </div>
+            </div>
+            <span class="header-quote" id="header-quote">「大道三千，殊途同归。」</span>
+        </header>
+
+        <!-- Messages -->
+        <main id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-label="Chat with 青">
+            <!-- Messages injected by chat.js -->
+        </main>
+
+        <!-- Suggestion Chips -->
+        <div id="chat-suggestions" class="chat-suggestions" role="navigation" aria-label="Suggested questions">
+            <!-- Chips injected by chat.js -->
+        </div>
+
+        <!-- Input Bar -->
+        <div class="chat-input-bar">
+            <input
+                type="text"
+                id="chat-input"
+                placeholder="Talk to 青..."
+                autocomplete="off"
+                aria-label="Type a message to 青"
+            >
+            <button id="chat-send" aria-label="Send message">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/personality.js?v=5"></script>
+    <script src="js/chat.js?v=5"></script>
+</body>
+</html>

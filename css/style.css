@@ -1,28 +1,28 @@
 /* =========================================
    CSS Reset & Base Variables
-   Chinese Ink Wash (水墨) Dark Theme
+   Sword Path Blessed Land (剑道福地) Theme
    ========================================= */
    :root {
-    /* Color Palette - Ink Wash Monochrome */
-    --bg-base: #0a0a0a;
-    --bg-surface: #141414;
-    --bg-card: rgba(255, 255, 255, 0.02);
+    /* Color Palette - Profound Void & Cutting Azure */
+    --bg-base: #03060a;      /* Extremely profound dark void */
+    --bg-surface: #070c16;   /* Slightly lighter for cards */
+    --bg-card: rgba(14, 25, 40, 0.4);
     
-    --text-primary: #e8e0d4; /* Warm parchment white */
-    --text-secondary: #8a817a; /* Aged ink grey */
+    --text-primary: #ffffff; /* Piercing silver-white */
+    --text-secondary: #9eaab6; /* Steel grey */
     
-    /* Ink accent colors - muted, traditional */
-    --accent-ink: #b8a89a; /* Warm beige/tan */
-    --accent-mist: #6b7b8d; /* Misty blue-grey */
-    --gradient-accent: linear-gradient(135deg, var(--accent-mist), var(--accent-ink));
+    /* Sword Path Accents */
+    --accent-ink: #ffffff; /* Blinding Silver Light */
+    --accent-mist: #cdd5dc; /* Metal/Steel glare */
+    --gradient-accent: linear-gradient(135deg, var(--accent-ink), var(--accent-mist));
 
     /* Typography */
     --font-main: 'Inter', sans-serif;
     
     /* Spacing & Layout */
     --container-width: 1100px;
-    --radius-md: 8px;
-    --radius-lg: 16px;
+    --radius-md: 2px; /* Sharper corners for sword path */
+    --radius-lg: 4px;
     
     /* Transitions */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -44,10 +44,12 @@ body {
     font-family: var(--font-main);
     line-height: 1.6;
     overflow-x: hidden;
-    /* Subtle paper texture overlay */
-    background-image: 
-        radial-gradient(ellipse at 20% 50%, rgba(100, 100, 100, 0.04) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(100, 100, 100, 0.03) 0%, transparent 50%);
+    /* Massive immersive Bo Qing background (Full-Bleed Parallax) */
+    background-image: url('../assets/bo-qing-bg.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 a {
@@ -59,19 +61,26 @@ a {
 .container {
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 3rem;
+    /* Seamless Ink Diffusion (No box, just a soft dark mist behind text) */
+    background: radial-gradient(ellipse at center, rgba(5, 8, 12, 0.75) 0%, rgba(5, 8, 12, 0.3) 60%, transparent 100%);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 0; 
+    box-shadow: none; /* No box shadows, keeping it completely integrated with the background */
 }
 
 /* =========================================
    Typography & Utilities
    ========================================= */
 .gradient-text {
-    background: linear-gradient(135deg, #d4c5b0, #f0e6d6, #c4b5a0);
+    background: linear-gradient(135deg, #ffffff, #8c9eab, #ffffff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
-    filter: drop-shadow(0 0 20px rgba(200, 180, 150, 0.15));
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
 .section {
@@ -79,21 +88,22 @@ a {
     position: relative;
 }
 
-/* Ink wash divider between sections */
+/* Splitting Sword Light divider between sections */
 .section::before {
     content: '';
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
+    width: 60%;
     height: 1px;
     background: linear-gradient(90deg, 
         transparent, 
-        rgba(184, 168, 154, 0.2) 20%, 
-        rgba(184, 168, 154, 0.3) 50%, 
-        rgba(184, 168, 154, 0.2) 80%, 
+        rgba(255, 255, 255, 0.4) 30%, 
+        rgba(255, 255, 255, 0.8) 50%, 
+        rgba(255, 255, 255, 0.4) 70%, 
         transparent);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
 .section-title {
@@ -145,44 +155,47 @@ a {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, rgba(184, 168, 154, 0.15), rgba(107, 123, 141, 0.15));
-    color: var(--text-primary);
-    border: 1px solid rgba(184, 168, 154, 0.3);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(140, 158, 171, 0.05));
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    background: linear-gradient(135deg, rgba(184, 168, 154, 0.25), rgba(107, 123, 141, 0.25));
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    border-color: rgba(184, 168, 154, 0.5);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(140, 158, 171, 0.15));
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #fff;
 }
 
 .btn-outline {
     background: transparent;
-    border: 1px solid rgba(184, 168, 154, 0.2);
+    border: 1px solid rgba(140, 158, 171, 0.3);
     color: var(--text-secondary);
 }
 
 .btn-outline:hover {
-    border-color: rgba(184, 168, 154, 0.4);
+    border-color: rgba(255, 255, 255, 0.6);
     color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .btn-primary-small {
-    background: rgba(184, 168, 154, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--accent-ink);
     padding: 0.5rem 1.2rem;
     border-radius: 2px;
     font-weight: 500;
-    border: 1px solid rgba(184, 168, 154, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     letter-spacing: 1px;
     text-transform: uppercase;
     font-size: 0.8rem;
 }
 .btn-primary-small:hover {
-    background: rgba(184, 168, 154, 0.2);
-    border-color: rgba(184, 168, 154, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    color: #fff;
 }
 
 /* =========================================
@@ -250,17 +263,18 @@ a {
     display: flex;
     align-items: center;
     position: relative;
-    overflow: hidden;
+    /* Hero does not strictly need the container box if we want pure full screen, 
+       but we will keep the glassmorphism card for the hero text */
 }
 
 #hero::before {
+    /* Shadow overlay to make text pop against the background */
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: 
-        radial-gradient(ellipse at 30% 40%, rgba(80, 70, 60, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 60%, rgba(60, 70, 80, 0.06) 0%, transparent 50%);
+    background: linear-gradient(to right, rgba(3, 6, 10, 0.8) 0%, transparent 80%);
     z-index: 1;
+    pointer-events: none;
 }
 
 .hero-content {
@@ -291,104 +305,13 @@ a {
     gap: 1rem;
 }
 
-/* Decorative Ink Mist Glows */
-.glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(120px);
-    z-index: 1;
-    opacity: 0.3;
-}
+/* Since we use full-bleed Bo Qing, glow effects can be disabled to keep it elegant */
+.glow { display: none; }
+.hero-ink-figure { display: none; }
 
-.glow-1 {
-    top: -15%;
-    right: -10%;
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(circle, rgba(60, 55, 50, 0.4), transparent 70%);
-    opacity: 0.3;
-}
-
-.glow-2 {
-    bottom: -25%;
-    left: -15%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(50, 60, 70, 0.3), transparent 70%);
-    opacity: 0.25;
-}
-
-/* Ink Wash Figure - Hero */
-.hero-ink-figure {
-    position: absolute;
-    right: -5%;
-    bottom: 0;
-    width: 55%;
-    max-width: 700px;
-    z-index: 4;
-    pointer-events: none;
-    opacity: 0.25;
-    mask-image: linear-gradient(to top, transparent 0%, black 20%, black 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to top, transparent 0%, black 20%, black 70%, transparent 100%);
-    filter: grayscale(0.3) contrast(1.1);
-}
-
-.hero-ink-figure img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* Ink Figure - About Section */
-.about-ink-art {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.ink-figure-img {
-    width: 100%;
-    max-height: 300px;
-    object-fit: cover;
-    object-position: top;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(184, 168, 154, 0.08);
-    filter: grayscale(0.2) contrast(1.05);
-    transition: var(--transition-smooth);
-    opacity: 0.85;
-}
-
-.ink-figure-img:hover {
-    opacity: 1;
-    filter: grayscale(0) contrast(1.1);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-    transform: scale(1.02);
-}
-
-/* Ink Background - Section Decoration */
-.ink-section-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.ink-bg-img {
-    position: absolute;
-    right: -10%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40%;
-    max-width: 500px;
-    opacity: 0.08;
-    filter: grayscale(1) contrast(1.2);
-    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-}
+/* Immersive Design doesn't need separate floating images */
+.about-ink-art { display: none; }
+.ink-section-bg { display: none; }
 
 #education {
     position: relative;
@@ -426,13 +349,12 @@ a {
 }
 
 /* =========================================
-   About Section
+   About Section - Full Width inside Glass
    ========================================= */
 .about-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 4rem;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .achievements-grid {
@@ -466,7 +388,7 @@ a {
     overflow: hidden;
 }
 
-/* Ink brush stroke accent on cards */
+/* Sword Dao Borders on cards */
 .stat-card::before {
     content: '';
     position: absolute;
@@ -474,13 +396,14 @@ a {
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(184, 168, 154, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.6), transparent);
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(184, 168, 154, 0.15);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    border-color: rgba(0, 210, 255, 0.3);
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.1);
 }
 
 .stat-card h3 {
@@ -499,7 +422,7 @@ a {
 }
 
 /* =========================================
-   Experience Timeline - Ink Scroll Style
+   Experience Timeline - Sword Path Style
    ========================================= */
 .timeline {
     position: relative;
@@ -515,9 +438,11 @@ a {
     width: 1px;
     background: linear-gradient(to bottom, 
         transparent, 
-        rgba(184, 168, 154, 0.3) 20%, 
-        rgba(184, 168, 154, 0.3) 80%, 
+        rgba(0, 210, 255, 0.3) 20%, 
+        rgba(255, 255, 255, 0.5) 50%, 
+        rgba(0, 210, 255, 0.3) 80%, 
         transparent);
+    box-shadow: 0 0 5px rgba(0, 210, 255, 0.3);
 }
 
 .timeline-item {
@@ -545,10 +470,11 @@ a {
 }
 
 .timeline-content {
-    background: rgba(20, 20, 20, 0.6);
+    background: radial-gradient(ellipse at center left, rgba(5, 8, 12, 0.8) 0%, rgba(5, 8, 12, 0) 90%);
     padding: 1.8rem 2rem;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(184, 168, 154, 0.06);
+    border: none;
+    box-shadow: none; /* Removed floating box shadow */
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
     flex: 1;
     transition: var(--transition-smooth);
 }
@@ -600,21 +526,22 @@ a {
     overflow: hidden;
 }
 
-/* Ink brush accent */
+/* Sword Dao sharp accent */
 .edu-card::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(184, 168, 154, 0.15), transparent);
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.5), transparent);
+    box-shadow: 0 0 8px rgba(0, 210, 255, 0.3);
 }
 
 .edu-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(184, 168, 154, 0.12);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    border-color: rgba(0, 210, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 210, 255, 0.1);
 }
 
 .edu-icon {

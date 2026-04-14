@@ -10,6 +10,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Qing AI Floating Chat */
+        .qing-float-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, rgba(184, 168, 154, 0.15), rgba(107, 123, 141, 0.15)); border: 1px solid rgba(184, 168, 154, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        .qing-float-btn:hover { transform: translateY(-5px) scale(1.05); border-color: rgba(184, 168, 154, 0.5); box-shadow: 0 8px 25px rgba(0,0,0,0.6); }
+        .qing-float-btn text { font-family: 'Inter', sans-serif; font-size: 30px; fill: #b8a89a; }
+        .qing-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        .qing-modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .qing-modal-content { width: 90%; max-width: 1000px; height: 85vh; background: #050507; border: 1px solid rgba(184, 168, 154, 0.2); border-radius: 16px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8); position: relative; transform: translateY(20px) scale(0.95); transition: all 0.5s ease; overflow: hidden; }
+        .qing-modal-overlay.active .qing-modal-content { transform: translateY(0) scale(1); }
+        .qing-modal-close { position: absolute; top: 15px; right: 20px; color: #8a817a; font-size: 24px; cursor: pointer; z-index: 2010; transition: 0.2s ease; background: rgba(10,10,12,0.8); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(184,168,154,0.1); }
+        .qing-modal-close:hover { color: #e8e0d4; border-color: rgba(184,168,154,0.4); }
+        .qing-modal-iframe { width: 100%; height: 100%; border: none; }
+        .qing-tooltip { position: absolute; right: 80px; bottom: 10px; background: rgba(10, 10, 12, 0.95); border: 1px solid rgba(184, 168, 154, 0.4); color: #e8e0d4; padding: 12px 18px; border-radius: 12px; border-bottom-right-radius: 2px; font-size: 14px; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); transform: translateX(15px) scale(0.9); font-family: 'Inter', sans-serif; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .qing-tooltip.show { opacity: 1; transform: translateX(0) scale(1); }
+        .qing-tooltip::after { content: ''; position: absolute; right: -6px; bottom: 4px; border-width: 6px 0 6px 6px; border-style: solid; border-color: transparent transparent transparent rgba(184, 168, 154, 0.4); }
+        .qing-notif-dot { position: absolute; top: -2px; right: -2px; width: 14px; height: 14px; background-color: #ff4757; border-radius: 50%; opacity: 0; transition: opacity 0.3s ease; border: 2px solid #141414; }
+        .qing-notif-dot.show { opacity: 1; animation: pulseNotif 2s infinite; }
+        @keyframes pulseNotif {
+            0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(255, 71, 87, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -35,9 +58,9 @@
                 <a href="#education" class="btn btn-outline">My Education</a>
             </div>
         </div>
-        <!-- Ink wash figure -->
+        <!-- Jian Sword figure -->
         <div class="hero-ink-figure">
-            <img src="assets/hero-ink.png" alt="Ink wash figure on misty mountain" />
+            <img src="assets/hero-jian.png" alt="Silver Sword on misty void" />
         </div>
         <!-- Decorative background elements -->
         <div class="glow glow-1"></div>
@@ -50,11 +73,11 @@
             <h2 class="section-title animate-up">About Me</h2>
             <div class="about-grid">
                 <div class="about-text animate-up delay-1">
-                    <p>My name is Harrison He. I'm a Cambridge Honours graduate from St John's College with outstanding A-Level results, including A* grades in Mathematics and Further Mathematics.</p>
-                    <p>I'm heading to the <strong>University of Illinois Urbana-Champaign</strong> to pursue a Bachelor's degree in Mathematics, with the potential to pivot into Computer Science + Mathematics. Beyond academics, I'm passionate about actuarial science, having job-shadowed at two leading firms, and I've dedicated over 100 hours to tutoring high school maths and Olympiad students.</p>
+                    <p>I'm Harrison He. Although my academic path points toward Mathematics and Computer Science at the <strong>University of Illinois Urbana-Champaign</strong>, my identity extends far beyond the classroom. As an <strong>INTJ</strong>, I naturally approach challenges with analytical thinking and objective logic, yet I am equally driven by a deep curiosity to experience life from multiple perspectives.</p>
+                    <p>I thrive on staying active and exploring new environments—whether I'm scaling a climbing wall, hiking a scenic trail, playing badminton, or unraveling puzzles in an escape room. When it's time to decompress, you will often find me listening to music, brewing traditional Chinese tea, getting lost in web novels, or jumping into a match of <em>League of Legends</em>.</p>
                 </div>
                 <div class="about-ink-art animate-up delay-2">
-                    <img src="assets/about-ink.png" alt="Ink wash meditation figure" class="ink-figure-img" />
+                    <img src="assets/about-jian.png" alt="Silver Sword Cultivator" class="ink-figure-img" />
                     <div class="about-stats">
                         <div class="stat-card">
                             <h3>A*A*</h3>
@@ -79,7 +102,7 @@
                     <div class="timeline-icon">&#x1F4BC;</div>
                     <div class="timeline-content">
                         <h3>Actuarial Job Shadow</h3>
-                        <p class="timeline-company">Discovery</p>
+                        <p class="timeline-company">Discovery <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| April 2024</span></p>
                         <p class="timeline-desc">Shadowed practising actuaries, gaining first-hand insight into risk assessment, pricing models, and the day-to-day responsibilities within one of South Africa's largest financial services groups.</p>
                     </div>
                 </div>
@@ -87,7 +110,7 @@
                     <div class="timeline-icon">&#x1F4BC;</div>
                     <div class="timeline-content">
                         <h3>Actuarial Job Shadow</h3>
-                        <p class="timeline-company">Argen Actuarial Solution</p>
+                        <p class="timeline-company">Argen Actuarial Solution <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| May 2024</span></p>
                         <p class="timeline-desc">Observed actuarial consulting in action, learning about actuarial valuations, financial modelling, and client advisory services at a specialist actuarial consultancy.</p>
                     </div>
                 </div>
@@ -98,7 +121,7 @@
     <!-- Education Section -->
     <section id="education" class="section">
         <div class="ink-section-bg">
-            <img src="assets/education-ink.png" alt="Ink wash scholar" class="ink-bg-img" />
+            <img src="assets/education-jian.png" alt="Sword Intent" class="ink-bg-img" />
         </div>
         <div class="container">
             <h2 class="section-title animate-up">Education</h2>
@@ -243,6 +266,23 @@
     </section>
 
 
+    <!-- Qing AI Floating Button -->
+    <div class="qing-float-btn" id="qing-float-btn" title="Talk to 青 (AI)">
+        <div class="qing-tooltip" id="qing-tooltip">I'm the Land Spirit. Need help?</div>
+        <div class="qing-notif-dot" id="qing-notif-dot"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="30" height="30">
+            <text x="50" y="70" text-anchor="middle">青</text>
+        </svg>
+    </div>
+
+    <!-- Qing AI Modal -->
+    <div class="qing-modal-overlay" id="qing-modal-overlay">
+        <div class="qing-modal-content">
+            <div class="qing-modal-close" id="qing-modal-close">&times;</div>
+            <iframe src="qing.html" class="qing-modal-iframe" id="qing-iframe"></iframe>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -251,5 +291,55 @@
     </footer>
 
     <script src="js/script.js"></script>
+    <script>
+        // Qing AI Modal Logic
+        const qingBtn = document.getElementById('qing-float-btn');
+        const qingModal = document.getElementById('qing-modal-overlay');
+        const qingClose = document.getElementById('qing-modal-close');
+        const qingTooltip = document.getElementById('qing-tooltip');
+        const qingNotifDot = document.getElementById('qing-notif-dot');
+        let hasOpenedQing = false;
+        
+        function openQing() {
+            qingModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+            qingTooltip.classList.remove('show');
+            qingNotifDot.classList.remove('show');
+            hasOpenedQing = true;
+        }
+
+        qingBtn.addEventListener('click', openQing);
+
+        qingClose.addEventListener('click', () => {
+            qingModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        qingModal.addEventListener('click', (e) => {
+            if(e.target === qingModal) {
+                qingModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Land Spirit proactively offers help
+        setTimeout(() => {
+            if (!hasOpenedQing) {
+                qingTooltip.classList.add('show');
+                qingNotifDot.classList.add('show');
+            }
+        }, 3000);
+
+        setTimeout(() => {
+            qingTooltip.classList.remove('show');
+        }, 12000);
+        
+        // Auto-open modal if user spends 20 seconds
+        setTimeout(() => {
+            if (!hasOpenedQing) {
+                openQing();
+            }
+        }, 20000);
+    </script>
 </body>
 </html>
