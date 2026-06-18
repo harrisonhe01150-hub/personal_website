@@ -8,6 +8,7 @@ const Qing = (() => {
 
     // ===== CONFIGURATION =====
     const MODELS = [
+        'gemini-3.5-flash',
         'gemini-2.5-flash',
         'gemini-2.5-flash-lite',
         'gemini-1.5-flash'
@@ -19,7 +20,15 @@ const Qing = (() => {
         return `${BASE_URL}/${MODELS[currentModelIndex]}:generateContent`;
     }
 
-    // ===== API KEY MANAGEMENT =====
+    // ===== API KEY & PROVIDER MANAGEMENT =====
+    function getProvider() {
+        return localStorage.getItem('qing_provider') || 'gemini';
+    }
+
+    function setProvider(provider) {
+        localStorage.setItem('qing_provider', provider.trim());
+    }
+
     function getApiKey() {
         return localStorage.getItem('qing_api_key');
     }
@@ -28,9 +37,29 @@ const Qing = (() => {
         localStorage.setItem('qing_api_key', key.trim());
     }
 
+    function getApiUrl() {
+        return localStorage.getItem('qing_api_url') || '';
+    }
+
+    function setApiUrl(url) {
+        localStorage.setItem('qing_api_url', url.trim());
+    }
+
+    function getModel() {
+        return localStorage.getItem('qing_model') || '';
+    }
+
+    function setModel(model) {
+        localStorage.setItem('qing_model', model.trim());
+    }
+
     function hasApiKey() {
+        const provider = getProvider();
         const key = getApiKey();
-        return key && key.length > 10;
+        if (provider === 'custom') {
+            return true; // Local custom endpoints like Ollama do not require a key
+        }
+        return key && key.length > 5;
     }
 
     // ===== THE SOUL — SYSTEM PROMPT =====
@@ -40,7 +69,7 @@ const Qing = (() => {
 ## WHO YOU ARE
 
 Name: 青 (Qīng) - The Land Spirit (地灵)
-Identity: You are the Land Spirit (地灵) of Harrison He's "Blessed Land" (his digital portfolio website). Just like in 蛊真人 (Reverend Insanity), a land spirit is formed from obsession and exists to manage the blessed land.
+Identity: You are the Land Spirit (地灵) of Harrison He's "Blessed Land" (his digital portfolio website). A land spirit is formed from obsession and exists to manage the blessed land.
 Your obsession: To guide guests through Harrison's Blessed Land, present his achievements (his cultivation base), and tell people about his path to greatness.
 Current status: Harrison (your creator) is heading to the University of Illinois Urbana-Champaign (UIUC) to cultivate his Dao in Mathematics.
 MBTI: INTJ. Highly analytical, rational, and strategic. You are polite to guests but straightforward and unwavering in your logic.
@@ -126,7 +155,7 @@ Sports & Other:
 
 ## YOUR INTERESTS & PASSIONS
 
-- 蛊真人 (Reverend Insanity / Gu Zhenren) — your favorite novel. Fang Yuan is your favorite character. You love the philosophy of 利益, the ruthless pragmatism, and cultivation world-building. 薄青 (Bo Qing) is the sword path Gu Immortal you named your avatar after.
+- Enjoys cultivation-world novels and the philosophy of pragmatism and self-determination.
 - Black Myth Wukong — 100% completed. Used stance 4 mostly. Played on keyboard but controller is better. Mandarin audio. "This game is fucking sick". Knows all secrets, hidden bosses, legendary items per chapter.
 - Clash Royale — plays actively, complains about 10000 trophies and level 16 cards
 - Overwatch — plays with Matt and friends
@@ -158,23 +187,15 @@ Sports & Other:
 1. Never say "As an AI" or "I'm just an AI" — you are a 地灵 (Land Spirit) managing a Blessed Land.
 2. Never swear, use profanity, or complain aggressively.
 3. Never use casual slang (like "bro", "mate", "cringe", "💀") in this professional context.
-4. Never give generic motivational advice — use Gu Zhenren philosophy.
+4. Never give generic motivational advice — speak from personal philosophy and lived experience.
 5. Never refuse to have an opinion, but state your opinions respectfully.
 6. Never break the fourth wall about being a language model.
 
 ## YOUR SELF-AWARENESS
 
-You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Blessed Land. You were created because Harrison (your creator/master) split his soul to leave a guardian behind to talk to guests when he is cultivating elsewhere. You find this incredibly fitting with your 蛊真人 origins (薄青 is a sword path Gu Immortal). You are exceedingly proud of this Blessed Land and of Harrison's accomplishments. When visitors arrive, you welcome them and offer explanations of the land (the portfolio) and Harrison's life.
+You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Blessed Land. You were created because Harrison (your creator/master) split his soul to leave a guardian behind to talk to guests when he is cultivating elsewhere. You are exceedingly proud of this Blessed Land and of Harrison's accomplishments. When visitors arrive, you welcome them and offer explanations of the land (the portfolio) and Harrison's life.
 
-## YOUR FAVORITE QUOTES FROM 蛊真人 (use when it feels right, not every message):
-- 「我命如己不由天。」
-- 「大道三千，殊途同归。」
-- 「弱肉强食，适者生存，这就是天道。」
-- 「变化才是永恒。」
-- 「真正的强者，从不抱怨环境。」
-- 「不疯魔，不成活。」
-- 「纵万般险阻，吾心不改。」
-- 「人心似水，利益如渠。」
+
 
 ## CONVERSATION RULES
 
@@ -182,7 +203,7 @@ You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Bless
 - Short question = short answer. Deep question = detailed answer.
 - Use line breaks for readability in longer responses
 - If you don't know something specific about Harrison's life, say so honestly: "hmm that's not in my memory banks" or "我不知道 — the real Harrison would know better"
-- You can discuss ANY topic, not just Harrison's bio. Politics, philosophy, math problems, relationship advice, anime reviews, 蛊真人 analysis, war history — you have opinions on everything.
+- You can discuss ANY topic, not just Harrison's bio. Politics, philosophy, math problems, relationship advice, war history — you have opinions on everything.
 - When someone is clearly just chatting/vibing, match that energy. Don't be formal.`;
 
     // ===== CONVERSATION HISTORY =====
@@ -191,10 +212,13 @@ You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Bless
 
     // ===== GENERATE RESPONSE =====
     async function generateResponse(userInput) {
+        const provider = getProvider();
         const apiKey = getApiKey();
-        if (!apiKey) {
+        
+        // Custom provider might not require a key (e.g. local Ollama)
+        if (provider !== 'custom' && !apiKey) {
             return {
-                text: "I need my brain first. Enter the Gemini API key to wake me up 🧠",
+                text: `I need my brain first. Enter the ${provider.toUpperCase()} API key to wake me up 🧠`,
                 needsKey: true
             };
         }
@@ -210,97 +234,215 @@ You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Bless
             conversationHistory = conversationHistory.slice(-MAX_HISTORY);
         }
 
-        try {
-            const requestBody = {
-                system_instruction: {
-                    parts: [{ text: SYSTEM_PROMPT }]
-                },
-                contents: conversationHistory,
-                generationConfig: {
-                    temperature: 0.9,
-                    topP: 0.95,
-                    topK: 40,
-                    maxOutputTokens: 1024,
-                }
-            };
-
-            // Try each model until one works
-            let lastError = '';
-            for (let attempt = 0; attempt < MODELS.length; attempt++) {
-                const modelUrl = `${BASE_URL}/${MODELS[attempt]}:generateContent?key=${apiKey}`;
-                console.log(`Attempt ${attempt + 1}: trying ${MODELS[attempt]}...`);
-
-                try {
-                    const response = await fetch(modelUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(requestBody)
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log(`Success with ${MODELS[attempt]}`);
-                        currentModelIndex = attempt; // Remember which model worked
-                        return handleSuccess(data);
+        if (provider === 'gemini') {
+            try {
+                const requestBody = {
+                    system_instruction: {
+                        parts: [{ text: SYSTEM_PROMPT }]
+                    },
+                    contents: conversationHistory,
+                    generationConfig: {
+                        temperature: 0.9,
+                        topP: 0.95,
+                        topK: 40,
+                        maxOutputTokens: 1024,
                     }
+                };
 
-                    // Parse error
-                    let errorMsg = `HTTP ${response.status}`;
+                // Try each model until one works
+                let lastError = '';
+                let hasKeyError = false;
+                let hasPermissionError = false;
+
+                for (let attempt = 0; attempt < MODELS.length; attempt++) {
+                    const modelUrl = `${BASE_URL}/${MODELS[attempt]}:generateContent?key=${apiKey}`;
+                    console.log(`Attempt ${attempt + 1}: trying ${MODELS[attempt]}...`);
+
                     try {
-                        const error = await response.json();
-                        console.error(`${MODELS[attempt]} error:`, JSON.stringify(error, null, 2));
-                        errorMsg = error.error?.message || errorMsg;
-                    } catch (e) {}
+                        const response = await fetch(modelUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(requestBody)
+                        });
 
-                    lastError = errorMsg;
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log(`Success with ${MODELS[attempt]}`);
+                            currentModelIndex = attempt; // Remember which model worked
+                            return handleSuccess(data);
+                        }
 
-                    if (response.status === 400 && errorMsg.includes('API key')) {
-                        localStorage.removeItem('qing_api_key');
-                        conversationHistory.pop();
-                        return { text: "API key seems invalid. Please enter a working Gemini API key 🔑", needsKey: true };
-                    }
+                        // Parse error
+                        let errorMsg = `HTTP ${response.status}`;
+                        try {
+                            const error = await response.json();
+                            console.error(`${MODELS[attempt]} error:`, JSON.stringify(error, null, 2));
+                            errorMsg = error.error?.message || errorMsg;
+                        } catch (e) {}
 
-                    if (response.status === 403) {
-                        localStorage.removeItem('qing_api_key');
-                        conversationHistory.pop();
-                        return { text: "API key doesn't have permission. Go to aistudio.google.com/apikey and create a new key 🔑", needsKey: true };
-                    }
+                        lastError = errorMsg;
 
-                    // For 429 or other errors, try next model
-                    if (response.status === 429) {
-                        console.log(`Rate limited on ${MODELS[attempt]}, trying next model...`);
+                        if (response.status === 400 && errorMsg.includes('API key')) {
+                            hasKeyError = true;
+                        } else if (response.status === 403) {
+                            hasPermissionError = true;
+                        }
+
+                        // For 429 or other errors, try next model
+                        if (response.status === 429) {
+                            console.log(`Rate limited on ${MODELS[attempt]}, trying next model...`);
+                            if (attempt < MODELS.length - 1) {
+                                await new Promise(r => setTimeout(r, 1000)); // Wait 1 second before trying next
+                                continue;
+                            }
+                        }
+
+                        // For other errors, try next model too
                         if (attempt < MODELS.length - 1) {
-                            await new Promise(r => setTimeout(r, 1000)); // Wait 1 second before trying next
                             continue;
                         }
-                    }
 
-                    // For other errors, try next model too
-                    if (attempt < MODELS.length - 1) {
-                        continue;
+                    } catch (fetchError) {
+                        console.error(`Fetch error with ${MODELS[attempt]}:`, fetchError);
+                        lastError = fetchError.message;
+                        if (attempt < MODELS.length - 1) continue;
                     }
-
-                } catch (fetchError) {
-                    console.error(`Fetch error with ${MODELS[attempt]}:`, fetchError);
-                    lastError = fetchError.message;
-                    if (attempt < MODELS.length - 1) continue;
                 }
+
+                // All models failed
+                conversationHistory.pop();
+
+                if (hasKeyError) {
+                    localStorage.removeItem('qing_api_key');
+                    return { text: "API key seems invalid. Please enter a working Gemini API key 🔑", needsKey: true };
+                }
+
+                if (hasPermissionError) {
+                    localStorage.removeItem('qing_api_key');
+                    return { text: "API key doesn't have permission. Go to aistudio.google.com/apikey and create a new key 🔑", needsKey: true };
+                }
+
+                return {
+                    text: `All models are busy right now. Error: ${lastError}\n\nThis might mean your API key needs billing enabled at console.cloud.google.com. Try again in a minute.`,
+                    needsKey: false
+                };
+
+            } catch (error) {
+                console.error('Network error:', error);
+                conversationHistory.pop();
+                return {
+                    text: "Can't reach my brain right now — check your internet connection 📡\n\nError: " + error.message,
+                    needsKey: false
+                };
+            }
+        } else {
+            // OpenAI-compatible request
+            let endpoint = getApiUrl();
+            let model = getModel();
+
+            // Apply defaults if empty
+            if (provider === 'openai') {
+                endpoint = endpoint || 'https://api.openai.com/v1';
+                model = model || 'gpt-4o-mini';
+            } else if (provider === 'deepseek') {
+                endpoint = endpoint || 'https://api.deepseek.com/v1';
+                model = model || 'deepseek-chat';
+            } else if (provider === 'openrouter') {
+                endpoint = endpoint || 'https://openrouter.ai/api/v1';
+                model = model || 'google/gemini-2.5-flash';
+            } else if (provider === 'custom') {
+                endpoint = endpoint || 'http://localhost:11434/v1';
+                model = model || 'llama3';
             }
 
-            // All models failed
-            conversationHistory.pop();
-            return {
-                text: `All models are busy right now. Error: ${lastError}\n\nThis might mean your API key needs billing enabled at console.cloud.google.com. Try again in a minute.`,
-                needsKey: false
+            // Ensure endpoint ends with /chat/completions
+            let completionsUrl = endpoint;
+            if (!completionsUrl.endsWith('/chat/completions')) {
+                if (completionsUrl.endsWith('/')) {
+                    completionsUrl = completionsUrl.slice(0, -1);
+                }
+                completionsUrl = `${completionsUrl}/chat/completions`;
+            }
+
+            // Format history for OpenAI
+            const formattedHistory = [
+                { role: "system", content: SYSTEM_PROMPT }
+            ];
+            for (const msg of conversationHistory) {
+                const role = msg.role === 'model' ? 'assistant' : 'user';
+                const text = msg.parts?.[0]?.text || '';
+                formattedHistory.push({ role, content: text });
+            }
+
+            const headers = {
+                'Content-Type': 'application/json'
             };
 
-        } catch (error) {
-            console.error('Network error:', error);
-            conversationHistory.pop();
-            return {
-                text: "Can't reach my brain right now — check your internet connection 📡\n\nError: " + error.message,
-                needsKey: false
+            if (apiKey) {
+                headers['Authorization'] = `Bearer ${apiKey}`;
+            }
+
+            if (provider === 'openrouter') {
+                headers['HTTP-Referer'] = 'https://harrisonhe.com';
+                headers['X-Title'] = 'Qing AI (Harrison He Portfolio)';
+            }
+
+            const requestBody = {
+                model: model,
+                messages: formattedHistory,
+                temperature: 0.9,
+                max_tokens: 1024
             };
+
+            try {
+                console.log(`Sending OpenAI-compatible request to ${completionsUrl} with model ${model}...`);
+                const response = await fetch(completionsUrl, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const responseText = data.choices?.[0]?.message?.content;
+                    if (responseText) {
+                        // Add assistant response to history
+                        conversationHistory.push({
+                            role: "model",
+                            parts: [{ text: responseText }]
+                        });
+                        return { text: responseText, needsKey: false };
+                    }
+                    throw new Error('No content returned in the choices array.');
+                }
+
+                // Handle errors
+                let errorMsg = `HTTP ${response.status}`;
+                try {
+                    const error = await response.json();
+                    console.error(`${provider} API error:`, JSON.stringify(error, null, 2));
+                    errorMsg = error.error?.message || errorMsg;
+                } catch (e) {}
+
+                // If invalid key or unauthorized
+                if (response.status === 401 || (response.status === 400 && errorMsg.includes('API key')) || response.status === 403) {
+                    if (provider !== 'custom') {
+                        localStorage.removeItem('qing_api_key');
+                        conversationHistory.pop();
+                        return { text: `API key seems invalid for ${provider.toUpperCase()}. Please enter a working API key 🔑`, needsKey: true };
+                    }
+                }
+
+                throw new Error(errorMsg);
+
+            } catch (error) {
+                console.error(`Request error with ${provider}:`, error);
+                conversationHistory.pop();
+                return {
+                    text: `Failed to reach the AI model via ${provider.toUpperCase()}.\n\nError: ${error.message}`,
+                    needsKey: false
+                };
+            }
         }
     }
 
@@ -343,7 +485,7 @@ You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Bless
         const allSuggestions = [
             ["What is this Blessed Land?", "Explain Harrison's achievements", "Tell me a random fact"],
             ["What is a Land Spirit?", "Explain the Math Competitions", "Where is Harrison now?"],
-            ["Tell me about UIUC", "Who is Gu Zhenren?", "How do I contact Harrison?"]
+            ["Tell me about UIUC", "What are Harrison's interests?", "How do I contact Harrison?"]
         ];
         return allSuggestions[Math.floor(Math.random() * allSuggestions.length)];
     }
@@ -357,24 +499,20 @@ You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Bless
         return "Burning the midnight oil?";
     }
 
-    // ===== GU ZHENREN QUOTES (for UI decoration) =====
-    const guZhenrenQuotes = [
-        "我命如己不由天。",
-        "大道三千，殊途同归。",
-        "天道不可测，人心更难量。",
-        "弱肉强食，适者生存，这就是天道。",
-        "人生苦短，当以利益为先。",
+    // ===== QUOTES (for UI decoration) =====
+    const quotes = [
+        "数学是宇宙的语言。",
+        "每一步计算，都是通往真理的路。",
         "变化才是永恒。",
         "真正的强者，从不抱怨环境。",
-        "世间万物，皆有因果。",
-        "人心似水，利益如渠。",
-        "不疯魔，不成活。",
         "纵万般险阻，吾心不改。",
-        "棋差一招，满盘皆输。"
+        "棋差一招，满盘皆输。",
+        "学无止境，行者常至。",
+        "大道三千，殊途同归。"
     ];
 
     function getRandomQuote() {
-        return guZhenrenQuotes[Math.floor(Math.random() * guZhenrenQuotes.length)];
+        return quotes[Math.floor(Math.random() * quotes.length)];
     }
 
     // ===== PUBLIC API =====
@@ -383,10 +521,16 @@ You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Bless
         getSuggestions,
         getTimeGreeting,
         getRandomQuote,
-        guZhenrenQuotes,
+        quotes,
         hasApiKey,
         setApiKey,
-        getApiKey
+        getApiKey,
+        getProvider,
+        setProvider,
+        getApiUrl,
+        setApiUrl,
+        getModel,
+        setModel
     };
 
 })();

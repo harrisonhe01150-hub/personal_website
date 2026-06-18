@@ -29,13 +29,30 @@
         <div class="modal-card">
             <div class="modal-icon">🧠</div>
             <h2 class="modal-title">Awaken 青's Mind</h2>
-            <p class="modal-desc">青 needs a brain to think. Enter a Google Gemini API key to give him consciousness.</p>
-            <p class="modal-hint">Free key → <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></p>
-            <div class="modal-input-group">
-                <input type="password" id="api-key-input" class="modal-input" placeholder="Paste your Gemini API key here..." autocomplete="off" spellcheck="false">
-                <button id="api-key-submit" class="modal-btn modal-btn-primary">Awaken</button>
+            <p class="modal-desc" id="modal-desc">青 needs a brain to think. Choose an LLM provider and enter your API key to give him consciousness.</p>
+            <p class="modal-hint" id="modal-hint">Free Gemini key → <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></p>
+            
+            <div class="modal-inputs-stack">
+                <select id="api-provider-select" class="modal-select" aria-label="Select LLM Provider">
+                    <option value="gemini">Google Gemini</option>
+                    <option value="openrouter">OpenRouter (CORS friendly, Llama/Claude/GPT)</option>
+                    <option value="openai">OpenAI (Direct, may have CORS issues)</option>
+                    <option value="deepseek">DeepSeek (Direct, may have CORS issues)</option>
+                    <option value="custom">Custom (OpenAI-compatible / Local)</option>
+                </select>
+                
+                <input type="password" id="api-key-input" class="modal-input" placeholder="Paste your API key here..." autocomplete="off" spellcheck="false">
+                
+                <div id="advanced-inputs" style="display:none; flex-direction:column; gap: 0.6rem; margin-top: 0.6rem; width: 100%;">
+                    <input type="text" id="api-url-input" class="modal-input" placeholder="API Endpoint (e.g., http://localhost:11434/v1)" autocomplete="off" spellcheck="false">
+                    <input type="text" id="api-model-input" class="modal-input" placeholder="Model Name (e.g., llama3)" autocomplete="off" spellcheck="false">
+                </div>
             </div>
-            <button id="api-key-skip" class="modal-btn modal-btn-skip">Skip for now</button>
+            
+            <div class="modal-actions" style="margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
+                <button id="api-key-submit" class="modal-btn modal-btn-primary" style="width:100%">Awaken</button>
+                <button id="api-key-skip" class="modal-btn modal-btn-skip" style="width:100%">Skip for now</button>
+            </div>
         </div>
     </div>
 

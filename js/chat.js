@@ -17,6 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const apiKeyInput = document.getElementById('api-key-input');
     const apiKeySubmit = document.getElementById('api-key-submit');
     const apiKeySkip = document.getElementById('api-key-skip');
+    
+    // New multi-provider DOM references
+    const apiProviderSelect = document.getElementById('api-provider-select');
+    const apiUrlInput = document.getElementById('api-url-input');
+    const apiModelInput = document.getElementById('api-model-input');
+    const advancedInputs = document.getElementById('advanced-inputs');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalHint = document.getElementById('modal-hint');
 
     let isTyping = false;
 
@@ -44,6 +52,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== API KEY MODAL =====
     function showApiKeyModal() {
+        // Initialize inputs with stored settings
+        if (apiProviderSelect) {
+            const provider = Qing.getProvider();
+            apiProviderSelect.value = provider;
+            
+            // Prefill stored keys
+            apiKeyInput.value = Qing.getApiKey() || '';
+            apiUrlInput.value = Qing.getApiUrl() || '';
+            apiModelInput.value = Qing.getModel() || '';
+            
+            // Trigger provider-specific visual layout
+            apiProviderSelect.dispatchEvent(new Event('change'));
+        }
+
         apiKeyModal.style.display = 'flex';
         setTimeout(() => {
             apiKeyModal.classList.add('visible');
@@ -58,18 +80,80 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400);
     }
 
+    // Handle provider selection UI updates
+    if (apiProviderSelect) {
+        apiProviderSelect.addEventListener('change', () => {
+            const provider = apiProviderSelect.value;
+            
+            if (provider === 'gemini') {
+                modalDesc.textContent = "青 needs a brain to think. Enter a Google Gemini API key to give him consciousness.";
+                modalHint.innerHTML = `Free key → <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>`;
+                apiKeyInput.setAttribute('placeholder', 'Paste your Gemini API key here...');
+                advancedInputs.style.display = 'none';
+            } else if (provider === 'openrouter') {
+                modalDesc.textContent = "Awaken 青 using OpenRouter. OpenRouter supports browser-based calls natively (CORS-friendly).";
+                modalHint.innerHTML = `Get OpenRouter Key → <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>`;
+                apiKeyInput.setAttribute('placeholder', 'Paste your OpenRouter API key here...');
+                
+                advancedInputs.style.display = 'flex';
+                apiUrlInput.style.display = 'none';
+                apiUrlInput.value = 'https://openrouter.ai/api/v1';
+                apiModelInput.value = Qing.getModel() || 'google/gemini-2.5-flash';
+                apiModelInput.setAttribute('placeholder', 'Model name (e.g. google/gemini-2.5-flash)');
+            } else if (provider === 'openai') {
+                modalDesc.textContent = "Awaken 青 using OpenAI. Note: OpenAI API calls from a browser may require custom CORS bypass.";
+                modalHint.innerHTML = `Get OpenAI Key → <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com</a>`;
+                apiKeyInput.setAttribute('placeholder', 'Paste your OpenAI API key here...');
+                
+                advancedInputs.style.display = 'flex';
+                apiUrlInput.style.display = 'none';
+                apiUrlInput.value = 'https://api.openai.com/v1';
+                apiModelInput.value = Qing.getModel() || 'gpt-4o-mini';
+                apiModelInput.setAttribute('placeholder', 'Model name (e.g. gpt-4o-mini)');
+            } else if (provider === 'deepseek') {
+                modalDesc.textContent = "Awaken 青 using DeepSeek. Note: DeepSeek API calls from a browser may require custom CORS bypass.";
+                modalHint.innerHTML = `Get DeepSeek Key → <a href="https://platform.deepseek.com" target="_blank" rel="noopener">platform.deepseek.com</a>`;
+                apiKeyInput.setAttribute('placeholder', 'Paste your DeepSeek API key here...');
+                
+                advancedInputs.style.display = 'flex';
+                apiUrlInput.style.display = 'none';
+                apiUrlInput.value = 'https://api.deepseek.com/v1';
+                apiModelInput.value = Qing.getModel() || 'deepseek-chat';
+                apiModelInput.setAttribute('placeholder', 'Model name (e.g. deepseek-chat)');
+            } else if (provider === 'custom') {
+                modalDesc.textContent = "Awaken 青 using any OpenAI-compatible API endpoint (e.g., local Ollama, Groq, Together).";
+                modalHint.innerHTML = `Configure custom API endpoint and model name below.`;
+                apiKeyInput.setAttribute('placeholder', 'Paste your API key here (leave blank if not required)...');
+                
+                advancedInputs.style.display = 'flex';
+                apiUrlInput.style.display = 'block';
+                apiUrlInput.value = Qing.getApiUrl() || 'http://localhost:11434/v1';
+                apiModelInput.value = Qing.getModel() || 'llama3';
+                apiUrlInput.setAttribute('placeholder', 'API Endpoint (e.g. http://localhost:11434/v1)');
+                apiModelInput.setAttribute('placeholder', 'Model Name (e.g. llama3)');
+            }
+        });
+    }
+
     apiKeySubmit.addEventListener('click', () => {
+        const provider = apiProviderSelect ? apiProviderSelect.value : 'gemini';
         const key = apiKeyInput.value.trim();
-        if (key.length > 10) {
-            Qing.setApiKey(key);
+        const url = apiUrlInput ? apiUrlInput.value.trim() : '';
+        const model = apiModelInput ? apiModelInput.value.trim() : '';
+
+        if (provider === 'custom' || key.length > 5) {
+            Qing.setProvider(provider);
+            Qing.setApiKey(key || 'no-key-required');
+            Qing.setApiUrl(url);
+            Qing.setModel(model);
             hideApiKeyModal();
             setTimeout(() => startChat(), 500);
         } else {
             apiKeyInput.style.borderColor = 'rgba(200, 100, 100, 0.5)';
-            apiKeyInput.setAttribute('placeholder', 'Key too short — paste your full API key');
+            apiKeyInput.setAttribute('placeholder', 'Please enter a valid API key');
             setTimeout(() => {
                 apiKeyInput.style.borderColor = '';
-                apiKeyInput.setAttribute('placeholder', 'Paste your Gemini API key here...');
+                apiKeyInput.setAttribute('placeholder', 'Paste your API key here...');
             }, 2000);
         }
     });
@@ -98,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const statusText = hasKey
             ? `Welcome, Guest. I am 青, the Land Spirit (地灵) managing this Blessed Land. Master Harrison is cultivating elsewhere. Do you have any questions about his achievements, this website, or his goals? I would be happy to explain.`
-            : `Welcome, Guest. I am 青, the Land Spirit (地灵) managing this Blessed Land. I need a Gemini API Key to awaken my full consciousness to assist you.`;
+            : `Welcome, Guest. I am 青, the Land Spirit (地灵) managing this Blessed Land. I need an LLM API Key to awaken my full consciousness to assist you.`;
 
         const welcomeHTML = `
             <div class="welcome-message">
@@ -316,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== HEADER QUOTE ROTATION =====
     const headerQuote = document.getElementById('header-quote');
     if (headerQuote) {
-        const quotes = Qing.guZhenrenQuotes;
+        const quotes = Qing.quotes;
         let quoteIndex = 0;
 
         setInterval(() => {

@@ -889,6 +889,39 @@ a {
     color: var(--text-secondary);
 }
 
+.modal-inputs-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.modal-select {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(184, 168, 154, 0.12);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-family: var(--font-main);
+    padding: 0.8rem 1rem;
+    outline: none;
+    border-radius: var(--radius-md);
+    width: 100%;
+    box-sizing: border-box;
+    transition: var(--transition-smooth);
+}
+
+.modal-select option {
+    background: #111114;
+    color: var(--text-primary);
+}
+
+.modal-select:focus {
+    border-color: rgba(184, 168, 154, 0.25);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 3px rgba(184, 168, 154, 0.05);
+}
+
 /* Setup key button in welcome message */
 .setup-key-btn {
     display: inline-block;
