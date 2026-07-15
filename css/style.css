@@ -45,7 +45,7 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     /* Massive immersive Bo Qing background (Full-Bleed Parallax) */
-    background-image: url('../assets/bo-qing-bg.png');
+    background-image: url('../assets/bo-qing-bg.jpg');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -305,13 +305,12 @@ a {
     gap: 1rem;
 }
 
-/* Since we use full-bleed Bo Qing, glow effects can be disabled to keep it elegant */
-.glow { display: none; }
-.hero-ink-figure { display: none; }
-
-/* Immersive Design doesn't need separate floating images */
-.about-ink-art { display: none; }
-.ink-section-bg { display: none; }
+/* Stat cards under the About text */
+.about-ink-art {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
 #education {
     position: relative;
@@ -825,9 +824,57 @@ footer {
     50% { transform: translateY(-20px) rotate(5deg); opacity: 0.6; }
 }
 
+/* Hamburger toggle (hidden on desktop) */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.nav-toggle span {
+    display: block;
+    height: 1px;
+    width: 100%;
+    background: var(--text-primary);
+    transition: var(--transition-smooth);
+}
+
+.nav-toggle.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
 /* Responsive tweaks */
 @media (max-width: 768px) {
-    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(10, 10, 10, 0.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(184, 168, 154, 0.1);
+        padding: 0.5rem 0;
+    }
+
+    .nav-links.open { display: flex; }
+
+    .nav-links li {
+        text-align: center;
+        padding: 0.8rem 0;
+    }
     .about-grid { grid-template-columns: 1fr; }
     .hero-cta { flex-direction: column; }
     .btn { text-align: center; }

@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harrison He - Aspiring Mathematician &amp; Actuary</title>
     <meta name="description" content="Personal portfolio of Harrison He - future Mathematics student at UIUC, Cambridge Honors recipient, and aspiring actuary.">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>青</text></svg>">
+    <!-- Open Graph / social sharing -->
+    <meta property="og:title" content="Harrison He — Aspiring Mathematician &amp; Actuary">
+    <meta property="og:description" content="Future Mathematics student at UIUC, Cambridge Honors recipient, maths olympiad medalist, and aspiring actuary.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://harrisonhe.com">
+    <meta property="og:image" content="https://harrisonhe.com/assets/avatar.png">
+    <meta name="twitter:card" content="summary">
     <!-- Google Fonts: Inter for clean modern typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +48,10 @@
     <nav id="navbar">
         <div class="nav-container">
             <div class="logo">Harrison He</div>
-            <ul class="nav-links">
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
                 <li><a href="#about">About</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#education">Education</a></li>
@@ -53,18 +65,12 @@
     <header id="hero" class="section">
         <div class="container hero-content">
             <h1 class="hero-title animate-up">Hello, I'm <span class="gradient-text">Harrison He</span>.</h1>
+            <p class="hero-subtitle animate-up delay-1">Mathematics @ UIUC '30 · Maths olympiad medalist · Aspiring actuary &amp; quant — wherever math meets money meets technology.</p>
             <div class="hero-cta animate-up delay-2">
                 <a href="#experience" class="btn btn-primary">View My Experience</a>
-                <a href="#education" class="btn btn-outline">My Education</a>
+                <a href="material/resume.pdf" class="btn btn-outline" target="_blank" rel="noopener">Download Resume</a>
             </div>
         </div>
-        <!-- Jian Sword figure -->
-        <div class="hero-ink-figure">
-            <img src="assets/hero-jian.png" alt="Silver Sword on misty void" />
-        </div>
-        <!-- Decorative background elements -->
-        <div class="glow glow-1"></div>
-        <div class="glow glow-2"></div>
     </header>
 
     <!-- About Section -->
@@ -77,7 +83,6 @@
                     <p>I thrive on staying active and exploring new environments—whether I'm scaling a climbing wall, hiking a scenic trail, playing badminton, or unraveling puzzles in an escape room. When it's time to decompress, you will often find me listening to music, brewing traditional Chinese tea, getting lost in web novels, or jumping into a match of <em>League of Legends</em>.</p>
                 </div>
                 <div class="about-ink-art animate-up delay-2">
-                    <img src="assets/about-jian.png" alt="Silver Sword Cultivator" class="ink-figure-img" />
                     <div class="about-stats">
                         <div class="stat-card">
                             <h3>A*A*</h3>
@@ -120,9 +125,6 @@
 
     <!-- Education Section -->
     <section id="education" class="section">
-        <div class="ink-section-bg">
-            <img src="assets/education-jian.png" alt="Sword Intent" class="ink-bg-img" />
-        </div>
         <div class="container">
             <h2 class="section-title animate-up">Education</h2>
             <div class="education-grid">
@@ -279,14 +281,14 @@
     <div class="qing-modal-overlay" id="qing-modal-overlay">
         <div class="qing-modal-content">
             <div class="qing-modal-close" id="qing-modal-close">&times;</div>
-            <iframe src="qing.html" class="qing-modal-iframe" id="qing-iframe"></iframe>
+            <iframe data-src="qing.html" class="qing-modal-iframe" id="qing-iframe" title="Chat with 青"></iframe>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 Harrison He. All rights reserved.</p>
+            <p>&copy; <span id="footer-year">2026</span> Harrison He. All rights reserved.</p>
         </div>
     </footer>
 
@@ -301,26 +303,44 @@
         let hasOpenedQing = false;
         
         function openQing() {
+            // Lazy-load the chat iframe only when first opened (saves ~all of
+            // qing.html's JS/CSS/fonts for visitors who never open the chat)
+            const iframe = document.getElementById('qing-iframe');
+            if (iframe && !iframe.src) {
+                iframe.src = iframe.dataset.src;
+            }
             qingModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; 
+            document.body.style.overflow = 'hidden';
             qingTooltip.classList.remove('show');
             qingNotifDot.classList.remove('show');
             hasOpenedQing = true;
         }
 
-        qingBtn.addEventListener('click', openQing);
-
-        qingClose.addEventListener('click', () => {
+        function closeQing() {
             qingModal.classList.remove('active');
             document.body.style.overflow = '';
+        }
+
+        // Escape key closes the modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && qingModal.classList.contains('active')) {
+                closeQing();
+            }
         });
+
+        qingBtn.addEventListener('click', openQing);
+
+        qingClose.addEventListener('click', closeQing);
 
         qingModal.addEventListener('click', (e) => {
             if(e.target === qingModal) {
-                qingModal.classList.remove('active');
-                document.body.style.overflow = '';
+                closeQing();
             }
         });
+
+        // Auto-update footer year
+        const yearEl = document.getElementById('footer-year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
 
         // Land Spirit proactively offers help
         setTimeout(() => {
@@ -333,13 +353,6 @@
         setTimeout(() => {
             qingTooltip.classList.remove('show');
         }, 12000);
-        
-        // Auto-open modal if user spends 20 seconds
-        setTimeout(() => {
-            if (!hasOpenedQing) {
-                openQing();
-            }
-        }, 20000);
     </script>
 </body>
 </html>

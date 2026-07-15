@@ -1,7 +1,7 @@
 // =========================================
-//   青 — Chat UI Controller
+//   青 — Chat UI Controller (v6)
 //   Handles DOM, events, rendering
-//   Now powered by Gemini AI
+//   Password-gated proxy by default, BYO key as backup
 // =========================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const provider = Qing.getProvider();
             apiProviderSelect.value = provider;
             
-            // Prefill stored keys
-            apiKeyInput.value = Qing.getApiKey() || '';
+            // Prefill stored keys / password
+            apiKeyInput.value = provider === 'qing' ? (Qing.getPassword() || '') : (Qing.getApiKey() || '');
             apiUrlInput.value = Qing.getApiUrl() || '';
             apiModelInput.value = Qing.getModel() || '';
             
@@ -84,8 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (apiProviderSelect) {
         apiProviderSelect.addEventListener('change', () => {
             const provider = apiProviderSelect.value;
-            
-            if (provider === 'gemini') {
+
+            if (provider === 'qing') {
+                modalDesc.textContent = "This Blessed Land is sealed. Enter the access password to awaken 青.";
+                modalHint.innerHTML = `Don't have the password? Ask Harrison, or pick a provider below and use your own API key.`;
+                apiKeyInput.setAttribute('placeholder', 'Enter access password...');
+                advancedInputs.style.display = 'none';
+            } else if (provider === 'gemini') {
                 modalDesc.textContent = "青 needs a brain to think. Enter a Google Gemini API key to give him consciousness.";
                 modalHint.innerHTML = `Free key → <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>`;
                 apiKeyInput.setAttribute('placeholder', 'Paste your Gemini API key here...');
@@ -136,10 +141,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     apiKeySubmit.addEventListener('click', () => {
-        const provider = apiProviderSelect ? apiProviderSelect.value : 'gemini';
+        const provider = apiProviderSelect ? apiProviderSelect.value : 'qing';
         const key = apiKeyInput.value.trim();
         const url = apiUrlInput ? apiUrlInput.value.trim() : '';
         const model = apiModelInput ? apiModelInput.value.trim() : '';
+
+        if (provider === 'qing') {
+            if (key.length > 0) {
+                Qing.setProvider('qing');
+                Qing.setPassword(key);
+                hideApiKeyModal();
+                setTimeout(() => startChat(), 500);
+            } else {
+                apiKeyInput.style.borderColor = 'rgba(200, 100, 100, 0.5)';
+                apiKeyInput.setAttribute('placeholder', 'Please enter the access password');
+                setTimeout(() => {
+                    apiKeyInput.style.borderColor = '';
+                    apiKeyInput.setAttribute('placeholder', 'Enter access password...');
+                }, 2000);
+            }
+            return;
+        }
 
         if (provider === 'custom' || key.length > 5) {
             Qing.setProvider(provider);
@@ -182,14 +204,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const statusText = hasKey
             ? `Welcome, Guest. I am 青, the Land Spirit (地灵) managing this Blessed Land. Master Harrison is cultivating elsewhere. Do you have any questions about his achievements, this website, or his goals? I would be happy to explain.`
-            : `Welcome, Guest. I am 青, the Land Spirit (地灵) managing this Blessed Land. I need an LLM API Key to awaken my full consciousness to assist you.`;
+            : `Welcome, Guest. I am 青, the Land Spirit (地灵) managing this Blessed Land. Enter the access password (or your own LLM API key) to awaken my full consciousness.`;
 
         const welcomeHTML = `
             <div class="welcome-message">
-                <img src="assets/avatar.png" alt="青" class="welcome-avatar" />
+                <img src="assets/avatar-small.jpg" alt="青" class="welcome-avatar" />
                 <h3 class="welcome-title">青 · 分魂</h3>
                 <p class="welcome-sub">${statusText}</p>
-                ${!hasKey ? '<button class="setup-key-btn" id="setup-key-btn">🔑 Enter API Key</button>' : ''}
+                ${!hasKey ? '<button class="setup-key-btn" id="setup-key-btn">🔑 Enter Password / API Key</button>' : ''}
             </div>
         `;
 
@@ -280,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (role === 'qing') {
             messageDiv.innerHTML = `
-                <img src="assets/avatar.png" alt="青" class="message-avatar" />
+                <img src="assets/avatar-small.jpg" alt="青" class="message-avatar" />
                 <div>
                     <div class="message-bubble">${processedText}</div>
                     <div class="message-time">青 · ${timeStr}</div>
@@ -328,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
         typingDiv.className = 'typing-indicator';
         typingDiv.id = 'typing-indicator';
         typingDiv.innerHTML = `
-            <img src="assets/avatar.png" alt="青" class="message-avatar" />
+            <img src="assets/avatar-small.jpg" alt="青" class="message-avatar" />
             <div class="typing-dots">
                 <span class="typing-dot"></span>
                 <span class="typing-dot"></span>

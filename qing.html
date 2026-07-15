@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>青 — Harrison He's 分魂</title>
     <meta name="description" content="青 (Qīng) — a soul fragment of Harrison He. A digital mind that thinks, speaks, and reasons as he does.">
     <meta name="author" content="Harrison He">
@@ -29,12 +29,13 @@
         <div class="modal-card">
             <div class="modal-icon">🧠</div>
             <h2 class="modal-title">Awaken 青's Mind</h2>
-            <p class="modal-desc" id="modal-desc">青 needs a brain to think. Choose an LLM provider and enter your API key to give him consciousness.</p>
-            <p class="modal-hint" id="modal-hint">Free Gemini key → <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></p>
-            
+            <p class="modal-desc" id="modal-desc">This Blessed Land is sealed. Enter the access password to awaken 青 — or bring your own LLM API key.</p>
+            <p class="modal-hint" id="modal-hint">Don't have the password? Ask Harrison, or choose a provider below and use your own key.</p>
+
             <div class="modal-inputs-stack">
                 <select id="api-provider-select" class="modal-select" aria-label="Select LLM Provider">
-                    <option value="gemini">Google Gemini</option>
+                    <option value="qing">青's Mind — Access Password</option>
+                    <option value="gemini">Google Gemini (your own key)</option>
                     <option value="openrouter">OpenRouter (CORS friendly, Llama/Claude/GPT)</option>
                     <option value="openai">OpenAI (Direct, may have CORS issues)</option>
                     <option value="deepseek">DeepSeek (Direct, may have CORS issues)</option>
@@ -64,7 +65,7 @@
 
         <!-- Header -->
         <header class="chat-header">
-            <img src="assets/avatar.png" alt="青" class="header-avatar" id="header-avatar">
+            <img src="assets/avatar-small.jpg" alt="青" class="header-avatar" id="header-avatar">
             <div class="header-info">
                 <h1 class="header-name">青 · 分魂</h1>
                 <div class="header-status">
