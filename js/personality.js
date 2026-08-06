@@ -71,7 +71,7 @@ const Qing = (() => {
             return true; // Local custom endpoints like Ollama do not require a key
         }
         const key = getApiKey();
-        return key && key.length > 5;
+        return !!key && key.length > 5;
     }
 
     // ===== THE SOUL — SYSTEM PROMPT =====
@@ -243,6 +243,16 @@ You know you are 青 — the Land Spirit (地灵) of Harrison He's digital Bless
                         contents: conversationHistory
                     })
                 });
+
+                if (response.status === 503) {
+                    // Server side is misconfigured — the visitor's password is
+                    // fine, so keep it and don't send them back to the modal.
+                    conversationHistory.pop();
+                    return {
+                        text: "The gate itself is unfinished — this Blessed Land has no seal set on the server side yet. Nothing you typed is wrong. Please tell Harrison 🔒",
+                        needsKey: false
+                    };
+                }
 
                 if (response.status === 401 || response.status === 403) {
                     conversationHistory.pop();

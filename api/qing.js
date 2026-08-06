@@ -41,7 +41,18 @@ module.exports = async function handler(req, res) {
     const { password, system, contents } = req.body || {};
 
     // --- Password check (server-side, so the key never leaves the server) ---
-    if (!process.env.QING_PASSWORD || password !== process.env.QING_PASSWORD) {
+    // Trim both sides: pasting into the Vercel dashboard often captures a
+    // trailing newline/space, which would silently reject every valid password.
+    const expected = String(process.env.QING_PASSWORD || '').trim();
+    const given = String(password || '').trim();
+
+    if (!expected) {
+        // Distinct from a wrong password, so the browser can tell the visitor
+        // the server is misconfigured instead of blaming what they typed.
+        return res.status(503).json({ error: 'Server has no QING_PASSWORD configured' });
+    }
+
+    if (given !== expected) {
         return res.status(401).json({ error: 'Invalid password' });
     }
 

@@ -19,13 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Navbar scroll effect
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+    }
 
     // Intersection Observer for scroll animations
     const observerOptions = {
@@ -55,9 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const targetElement = document.querySelector(targetId);
             if(targetElement) {
-                const navHeight = navbar.offsetHeight;
+                const navHeight = navbar ? navbar.offsetHeight : 0;
                 const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                const offsetPosition = elementPosition + window.scrollY - navHeight;
 
                 window.scrollTo({
                     top: offsetPosition,

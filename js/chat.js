@@ -371,8 +371,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ===== SUGGESTIONS =====
+    // Both show and hide use delayed timers. Without cancelling the pending
+    // one, a fast reply lets hideSuggestions' clear (+400ms) wipe the chips
+    // showSuggestions just rendered (+300ms), leaving an empty visible strip.
+    let suggestionsClearTimer = null;
+    let suggestionsShowTimer = null;
+
     function showSuggestions(suggestions) {
+        clearTimeout(suggestionsClearTimer);
+        clearTimeout(suggestionsShowTimer);
         suggestionsContainer.innerHTML = '';
+
+        if (!Array.isArray(suggestions) || suggestions.length === 0) {
+            suggestionsContainer.classList.remove('visible');
+            return;
+        }
 
         suggestions.forEach((text, i) => {
             const chip = document.createElement('button');
@@ -386,14 +399,16 @@ document.addEventListener('DOMContentLoaded', () => {
             suggestionsContainer.appendChild(chip);
         });
 
-        setTimeout(() => {
+        suggestionsShowTimer = setTimeout(() => {
             suggestionsContainer.classList.add('visible');
         }, 100);
     }
 
     function hideSuggestions() {
+        clearTimeout(suggestionsShowTimer);
+        clearTimeout(suggestionsClearTimer);
         suggestionsContainer.classList.remove('visible');
-        setTimeout(() => {
+        suggestionsClearTimer = setTimeout(() => {
             suggestionsContainer.innerHTML = '';
         }, 400);
     }
