@@ -9,7 +9,7 @@
     --bg-card: rgba(14, 25, 40, 0.4);
     
     --text-primary: #ffffff; /* Piercing silver-white */
-    --text-secondary: #9eaab6; /* Steel grey */
+    --text-secondary: #c7cfd8; /* Steel grey, lifted for legibility on the ink wash */
     
     /* Sword Path Accents */
     --accent-ink: #ffffff; /* Blinding Silver Light */
@@ -63,8 +63,11 @@ a {
     margin: 0 auto;
     padding: 3rem;
     /* Seamless Ink Diffusion (No box, just a soft dark mist behind text) */
-    background: radial-gradient(ellipse at center, rgba(5, 8, 12, 0.75) 0%, rgba(5, 8, 12, 0.3) 60%, transparent 100%);
-    backdrop-filter: blur(4px);
+    /* Ink-paper panel: the wash stays visible but always sits behind a dark scrim, so text never lands on a light patch */
+    background: radial-gradient(ellipse at center, rgba(5, 8, 12, 0.93) 0%, rgba(5, 8, 12, 0.86) 65%, rgba(5, 8, 12, 0.80) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(205, 213, 220, 0.06);
     -webkit-backdrop-filter: blur(4px);
     border: none;
     border-radius: 0; 
@@ -469,7 +472,7 @@ a {
 }
 
 .timeline-content {
-    background: radial-gradient(ellipse at center left, rgba(5, 8, 12, 0.8) 0%, rgba(5, 8, 12, 0) 90%);
+    background: rgba(5, 8, 12, 0.55);
     padding: 1.8rem 2rem;
     border: none;
     box-shadow: none; /* Removed floating box shadow */
