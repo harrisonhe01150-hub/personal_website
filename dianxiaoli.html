@@ -17,7 +17,11 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* Page-specific: a long-form technical note on top of the site theme */
-        .wu { max-width: 860px; margin: 0 auto; padding: 7.5rem 1.5rem 5rem; }
+        .wu { max-width: 900px; margin: 6.5rem auto 4rem; padding: 3.2rem 3rem 3.5rem;
+             /* Same ink-paper panel as the home page: wash stays visible around the panel, text always sits on a dark scrim */
+             background: radial-gradient(ellipse at center, rgba(5, 8, 12, 0.93) 0%, rgba(5, 8, 12, 0.87) 65%, rgba(5, 8, 12, 0.82) 100%);
+             backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+             border: 1px solid rgba(205, 213, 220, 0.06); }
         .wu-kicker { font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-secondary); font-weight: 400; margin-bottom: 1rem; }
         .wu h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 300; letter-spacing: 1px; line-height: 1.15; margin-bottom: 0.8rem; }
         .wu h1 .zh { font-weight: 500; }
@@ -50,7 +54,7 @@
         .wu-meta a:hover { color: var(--text-primary); border-color: var(--text-primary); }
         .wu-back { display: inline-block; font-size: 0.82rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 2.5rem; }
         .wu-back:hover { color: var(--text-primary); }
-        @media (max-width: 600px) { .wu { padding-top: 6rem; } .wu-stat .n { font-size: 1.4rem; } }
+        @media (max-width: 600px) { .wu { margin: 5.5rem 0.75rem 3rem; padding: 2.2rem 1.25rem 2.5rem; } .wu-stat .n { font-size: 1.4rem; } }
     </style>
 </head>
 <body>
