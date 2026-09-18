@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店小力 · Dianxiaoli — Technical Write-up | Harrison He</title>
+    <meta name="description" content="Engineering write-up of Dianxiaoli, an AI shop assistant living inside WeChat Customer Service and WhatsApp, live with three paying merchants in China and South Africa. Architecture, evaluation, and the decisions behind it.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>青</text></svg>">
+    <meta property="og:title" content="店小力 · Dianxiaoli — Technical Write-up">
+    <meta property="og:description" content="An AI shop assistant for small merchants: architecture, evaluation discipline, and measured results. Built solo, live in production since April 2026.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://harrisonhe.com/dianxiaoli.html">
+    <meta property="og:image" content="https://harrisonhe.com/assets/avatar.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Page-specific: a long-form technical note on top of the site theme */
+        .wu { max-width: 860px; margin: 0 auto; padding: 7.5rem 1.5rem 5rem; }
+        .wu-kicker { font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-secondary); font-weight: 400; margin-bottom: 1rem; }
+        .wu h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 300; letter-spacing: 1px; line-height: 1.15; margin-bottom: 0.8rem; }
+        .wu h1 .zh { font-weight: 500; }
+        .wu-lede { color: var(--text-secondary); font-size: 1.05rem; font-weight: 300; line-height: 1.7; max-width: 62ch; margin-bottom: 1.6rem; }
+        .wu-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 3.5rem; }
+        .wu-pill { font-size: 0.78rem; letter-spacing: 0.5px; color: var(--accent-mist); border: 1px solid rgba(205, 213, 220, 0.25); padding: 0.35rem 0.75rem; border-radius: var(--radius-md); background: rgba(5, 8, 12, 0.6); font-weight: 400; }
+        .wu h2 { font-size: 1.25rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; margin: 3.2rem 0 1.1rem; padding-bottom: 0.5rem; position: relative; }
+        .wu h2::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 2px; background: linear-gradient(90deg, var(--accent-ink), transparent); }
+        .wu h3 { font-size: 1rem; font-weight: 500; letter-spacing: 0.5px; margin: 1.6rem 0 0.5rem; color: var(--text-primary); }
+        .wu p, .wu li { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.75; font-weight: 300; }
+        .wu p { margin-bottom: 1rem; max-width: 68ch; }
+        .wu ul { list-style: none; padding: 0; margin: 0 0 1rem; }
+        .wu ul li { position: relative; padding-left: 1.3rem; margin-bottom: 0.55rem; max-width: 68ch; }
+        .wu ul li::before { content: '—'; position: absolute; left: 0; color: rgba(205, 213, 220, 0.6); }
+        .wu strong { color: var(--text-primary); font-weight: 500; }
+        .wu code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85em; color: var(--accent-mist); background: rgba(14, 25, 40, 0.5); padding: 0.1em 0.4em; border-radius: var(--radius-md); }
+        .wu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: rgba(205, 213, 220, 0.12); border: 1px solid rgba(205, 213, 220, 0.12); margin: 1.2rem 0 1.6rem; }
+        .wu-stat { background: rgba(5, 8, 12, 0.85); padding: 1.2rem 1.3rem; }
+        .wu-stat .n { font-size: 1.7rem; font-weight: 300; letter-spacing: -0.5px; color: var(--text-primary); line-height: 1.1; font-variant-numeric: tabular-nums; }
+        .wu-stat .l { font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.35rem; line-height: 1.4; }
+        .wu-flow { display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin: 1rem 0 1.4rem; }
+        .wu-role { border-left: 2px solid rgba(255, 255, 255, 0.2); padding: 0.7rem 1.1rem; background: radial-gradient(ellipse at center left, rgba(5, 8, 12, 0.8) 0%, rgba(5, 8, 12, 0) 90%); }
+        .wu-role b { display: block; color: var(--text-primary); font-weight: 500; font-size: 0.9rem; letter-spacing: 0.5px; margin-bottom: 0.15rem; }
+        .wu-role span { font-size: 0.88rem; color: var(--text-secondary); font-weight: 300; }
+        .wu-decision { border: 1px solid rgba(205, 213, 220, 0.14); background: rgba(5, 8, 12, 0.7); padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
+        .wu-decision h3 { margin-top: 0; }
+        .wu-decision p:last-child { margin-bottom: 0; }
+        .wu-meta { font-size: 0.82rem; color: var(--text-secondary); border-top: 1px solid rgba(205, 213, 220, 0.12); padding-top: 1.2rem; margin-top: 3.5rem; line-height: 1.7; }
+        .wu-meta a { color: var(--accent-mist); border-bottom: 1px solid rgba(205, 213, 220, 0.3); }
+        .wu-meta a:hover { color: var(--text-primary); border-color: var(--text-primary); }
+        .wu-back { display: inline-block; font-size: 0.82rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 2.5rem; }
+        .wu-back:hover { color: var(--text-primary); }
+        @media (max-width: 600px) { .wu { padding-top: 6rem; } .wu-stat .n { font-size: 1.4rem; } }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo"><a href="index.html">Harrison He</a></div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#experience">Experience</a></li>
+                <li><a href="index.html#education">Education</a></li>
+                <li><a href="index.html#achievements">Achievements</a></li>
+                <li><a href="index.html#contact" class="btn-primary-small">Let's Talk</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="wu">
+        <a class="wu-back" href="index.html#experience">← Back to experience</a>
+
+        <div class="wu-kicker">Project write-up · April 2026 – present</div>
+        <h1><span class="zh">店小力</span> · Dianxiaoli<br>An AI shop assistant that lives inside WeChat and WhatsApp</h1>
+        <p class="wu-lede">A single source of truth for a small merchant — prices, stock, policies, orders — that buyers, staff and the owner all query through the chat app they already use. Built and operated solo; in production with three paying merchants on two continents.</p>
+
+        <div class="wu-pills">
+            <span class="wu-pill">Live in production</span>
+            <span class="wu-pill">3 paying merchants · China &amp; South Africa</span>
+            <span class="wu-pill">Solo-built since April 2026</span>
+            <span class="wu-pill">Python · FastAPI · Railway</span>
+            <span class="wu-pill">DeepSeek · Anthropic · OpenAI</span>
+        </div>
+
+        <h2>The problem</h2>
+        <p>In a small trading business the workflow <em>is</em> the people. The owner sets prices, the buyer sets quotes, the technician answers after-sales. The business runs when they are online and stops when they are not, and knowledge leaves with whoever leaves. The most visible symptom is on the customer side: a wholesale stall in Johannesburg measured roughly <strong>40% of buyer inquiries going unanswered</strong> over the 30 days before deployment, because five people were already in a hundred WhatsApp threads.</p>
+        <p>Dianxiaoli moves those facts out of people's heads and into one place, then lets three kinds of user ask it — each seeing only the fields they should.</p>
+
+        <div class="wu-flow">
+            <div class="wu-role"><b>Buyer</b><span>Asks for a price, negotiates, sends a payment screenshot, asks about shipping. Gets an answer in their language in seconds, from the merchant's own catalogue.</span></div>
+            <div class="wu-role"><b>Staff</b><span>Asks the same question a buyer would — and gets the fields a salesperson is allowed to see, without going through the owner. (Shipping in the next release.)</span></div>
+            <div class="wu-role"><b>Owner</b><span>Approves orders and payments, updates prices, adds products, reads a daily report — in one-line plain-language messages.</span></div>
+        </div>
+
+        <h2>What is live</h2>
+        <ul>
+            <li><strong>Lifong Trading</strong>, Johannesburg — wholesale stall, ~300 SKUs, ~300 active buyers on WhatsApp.</li>
+            <li><strong>Lolawe Fashions</strong>, Johannesburg — fashion retail, with automated Instagram posting for new arrivals (measured 19 s from product photo to published post).</li>
+            <li><strong>An office-equipment distributor</strong>, China — after-sales assistant over long-form product documentation, and an internal quote assistant for the sales team.</li>
+        </ul>
+        <p>Each merchant runs on WeChat Customer Service or WhatsApp Business through the platforms' official APIs. Deployment for the first merchant took three weeks; it is now two to three days, using an industry "skill-pack" layer (wholesale stall / retail / factory) on a shared core.</p>
+
+        <h2>Architecture</h2>
+        <p>One FastAPI service. Inbound messages are routed by channel and by role (buyer / owner), then handled by a single <code>brain()</code> that produces a reply plus optional structured actions — <code>[ORDER:sku:qty]</code>, <code>[WAITLIST]</code>, <code>[ESCALATE]</code> — which the service executes. Model calls are routed by task:</p>
+        <ul>
+            <li><strong>Text</strong> — DeepSeek, behind a price-hallucination guard that checks every quoted number against the catalogue before it is sent.</li>
+            <li><strong>Images</strong> (payment screenshots, product photos, spec sheets) — Claude vision, with a confidence floor and a fallback model.</li>
+            <li><strong>Voice notes</strong> — OpenAI Whisper. <strong>Social images</strong> — OpenAI image generation.</li>
+            <li><strong>Any provider down</strong> — falls back to a rule engine that can still quote, take an order and escalate. No single vendor is load-bearing.</li>
+        </ul>
+        <p>Six internal agents sit around the core: lead capture, sales, a QA auditor, finance (payment-proof ledger and follow-up), business reporting, and a catalogue import pipeline that turns a merchant's Excel sheet into a live store.</p>
+
+        <h2>Decisions I would defend</h2>
+
+        <div class="wu-decision">
+            <h3>Catalogue retrieval is exact-match, not vector search — on purpose</h3>
+            <p>Product names and SKUs are identifiers, not concepts. Semantic similarity happily matches <code>A100</code> to <code>A200</code>, and a wrong-but-plausible price is the worst failure a quoting system can have. Retrieval is keyword and identifier matching over the merchant's table, with an explicit "we don't carry that — here is what we do have" path when nothing matches. The one place vector retrieval <em>is</em> used is the after-sales assistant, where the corpus is long-form FAQ text and the failure mode is benign.</p>
+        </div>
+
+        <div class="wu-decision">
+            <h3>Hard constraints live outside the model</h3>
+            <p>Three rules the assistant cannot break regardless of prompt: it never states stock quantities, never reveals what another buyer paid, and never discloses or invents a floor price. Separately, the model <strong>never confirms a shipment and never judges whether money has arrived</strong> — a payment screenshot creates a pending item for the owner, who approves it; the reply to the buyer is generated only after that. These are enforced in code and tested, not requested in a prompt.</p>
+        </div>
+
+        <div class="wu-decision">
+            <h3>The buyer's reply path is protected from everything else</h3>
+            <p>Owner notifications (new order, failed delivery, payment proof) go through a queued, asynchronous channel with rate limiting. Adding them did not change buyer latency — the reply path measures 4–5 ms of overhead before the model call, and end-to-end P95 stays under 3 s.</p>
+        </div>
+
+        <div class="wu-decision">
+            <h3>Merchant data leaves only with consent, through a separate key</h3>
+            <p>A 17-field operating-health profile (inquiry volume, conversion, receivables structure, proof-verification rate, stock value) can be exported to a partner — but only after the owner grants consent in-chat, through a key that is distinct from the owner's own key, with grant/revoke idempotent and logged. Revoking returns 403 immediately.</p>
+        </div>
+
+        <h2>Testing and evaluation</h2>
+        <p>The system is released only through an automated gate: <strong>13 test suites, 491 checks</strong> — buyer scenario gates (Chinese and factory-mode), vision, catalogue import, owner notifications, payment-proof and follow-up, consent, cold start, plus Playwright end-to-end runs against a live server. The gate has blocked my own releases twice. In production, a daily nine-item audit reviews the previous day's conversations for red-line violations, unanswered messages and quoting errors, and reports to the owner.</p>
+        <p>The thing I care about most is the same thing I learned building a handwriting-grading system earlier: the interesting failures are quiet ones. A quoting assistant that is right 95% of the time and confidently wrong 5% of the time is worse than one that says "let me check with the owner" — so the evaluation work is about finding <em>where</em> the model fails and moving those cases out of its hands.</p>
+
+        <div class="wu-grid">
+            <div class="wu-stat"><div class="n">491</div><div class="l">automated checks across 13 suites, all green before release</div></div>
+            <div class="wu-stat"><div class="n">&lt; 3 s</div><div class="l">P95 end-to-end reply latency in production</div></div>
+            <div class="wu-stat"><div class="n">3 wk → 2–3 d</div><div class="l">time to deploy a new merchant</div></div>
+            <div class="wu-stat"><div class="n">≈ ¥100</div><div class="l">model and hosting cost per store per month, measured</div></div>
+        </div>
+
+        <h2>Status and what is next</h2>
+        <ul>
+            <li><strong>April 2026</strong> — first merchant live, solo-built.</li>
+            <li><strong>September 2026</strong> — external collaboration with a licensed fintech company in China to develop a standardised edition for its small-business merchants; two additional contributors on an isolated onboarding module.</li>
+            <li><strong>Next</strong> — multi-tenant core (one deployment serving many stores, routed by customer-service account), then the staff role with a field-level visibility table so a price change reaches everyone who is allowed to see it, at once, with a timestamp.</li>
+        </ul>
+
+        <div class="wu-meta">
+            The source is private while the collaboration agreement is being finalised; I am glad to walk through the code and test suites on a call.<br>
+            Harrison He · <a href="index.html">harrisonhe.com</a> · <a href="mailto:harrisonhe.01150@gmail.com">harrisonhe.01150@gmail.com</a>
+        </div>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
