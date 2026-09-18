@@ -49,6 +49,9 @@
         .wu-decision { border: 1px solid rgba(205, 213, 220, 0.14); background: rgba(5, 8, 12, 0.7); padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
         .wu-decision h3 { margin-top: 0; }
         .wu-decision p:last-child { margin-bottom: 0; }
+        .wu-fig { margin: 1.4rem 0 2rem; }
+        .wu-fig svg { width: 100%; max-width: 100%; height: auto; display: block; color: var(--text-primary); }
+        .wu-fig figcaption { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.7rem; line-height: 1.5; max-width: 68ch; }
         .wu-meta { font-size: 0.82rem; color: var(--text-secondary); border-top: 1px solid rgba(205, 213, 220, 0.12); padding-top: 1.2rem; margin-top: 3.5rem; line-height: 1.7; }
         .wu-meta a { color: var(--accent-mist); border-bottom: 1px solid rgba(205, 213, 220, 0.3); }
         .wu-meta a:hover { color: var(--text-primary); border-color: var(--text-primary); }
@@ -107,15 +110,130 @@
         </ul>
         <p>Each merchant runs on WeChat Customer Service or WhatsApp Business through the platforms' official APIs. Deployment for the first merchant took three weeks; it is now two to three days, using an industry "skill-pack" layer (wholesale stall / retail / factory) on a shared core.</p>
 
-        <h2>Architecture</h2>
-        <p>One FastAPI service. Inbound messages are routed by channel and by role (buyer / owner), then handled by a single <code>brain()</code> that produces a reply plus optional structured actions — <code>[ORDER:sku:qty]</code>, <code>[WAITLIST]</code>, <code>[ESCALATE]</code> — which the service executes. Model calls are routed by task:</p>
-        <ul>
-            <li><strong>Text</strong> — DeepSeek, behind a price-hallucination guard that checks every quoted number against the catalogue before it is sent.</li>
-            <li><strong>Images</strong> (payment screenshots, product photos, spec sheets) — Claude vision, with a confidence floor and a fallback model.</li>
-            <li><strong>Voice notes</strong> — OpenAI Whisper. <strong>Social images</strong> — OpenAI image generation.</li>
-            <li><strong>Any provider down</strong> — falls back to a rule engine that can still quote, take an order and escalate. No single vendor is load-bearing.</li>
-        </ul>
-        <p>Six internal agents sit around the core: lead capture, sales, a QA auditor, finance (payment-proof ledger and follow-up), business reporting, and a catalogue import pipeline that turns a merchant's Excel sheet into a live store.</p>
+        <h2>How a message moves through the system</h2>
+        <p>One FastAPI service, one process per merchant today (multi-tenant routing is the next release). Everything below is deterministic Python around exactly one model call per turn; the model produces text and a small set of tagged actions, and the service decides what to do with them.</p>
+
+        <figure class="wu-fig">
+            <svg viewBox="0 0 860 530" role="img" aria-label="Request path: a buyer message enters from WeChat or WhatsApp, is normalised and role-resolved, media is transcribed or read by a vision model, the catalogue is queried by exact identifier, the language model drafts a reply with action tags, guards check the reply, then the service executes actions, replies to the buyer, and queues an owner notification on a separate thread.">
+                <defs>
+                    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                        <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+                    </marker>
+                </defs>
+                <g font-family="Inter, sans-serif" font-size="12" fill="currentColor">
+                    <!-- Column 1: inbound -->
+                    <rect x="20" y="30" width="170" height="54" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
+                    <text x="105" y="52" text-anchor="middle" font-weight="500">Webhook in</text>
+                    <text x="105" y="70" text-anchor="middle" fill-opacity="0.7">WeChat KF · WhatsApp</text>
+
+                    <rect x="20" y="124" width="170" height="54" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
+                    <text x="105" y="146" text-anchor="middle" font-weight="500">Normalise + role</text>
+                    <text x="105" y="164" text-anchor="middle" fill-opacity="0.7">buyer · owner · factory mode</text>
+
+                    <rect x="20" y="218" width="170" height="54" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
+                    <text x="105" y="240" text-anchor="middle" font-weight="500">Media pre-pass</text>
+                    <text x="105" y="258" text-anchor="middle" fill-opacity="0.7">Whisper · vision + conf. floor</text>
+
+                    <line x1="105" y1="84" x2="105" y2="122" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+                    <line x1="105" y1="178" x2="105" y2="216" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+
+                    <!-- Column 2: retrieval + brain -->
+                    <rect x="260" y="124" width="190" height="54" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
+                    <text x="355" y="146" text-anchor="middle" font-weight="500">Catalogue lookup</text>
+                    <text x="355" y="164" text-anchor="middle" fill-opacity="0.7">exact SKU / keyword table</text>
+
+                    <rect x="240" y="218" width="230" height="72" rx="2" fill="none" stroke="#cdd5dc" stroke-width="1.5"/>
+                    <text x="355" y="242" text-anchor="middle" font-weight="500">brain()</text>
+                    <text x="355" y="259" text-anchor="middle" fill-opacity="0.7">DeepSeek · one call per turn</text>
+                    <text x="355" y="276" text-anchor="middle" fill-opacity="0.7">reply + action tags</text>
+
+                    <line x1="190" y1="245" x2="238" y2="245" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+                    <text x="214" y="238" text-anchor="middle" font-size="10" fill-opacity="0.7">text</text>
+                    <line x1="355" y1="178" x2="355" y2="216" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+                    <text x="395" y="201" font-size="10" fill-opacity="0.7">matched rows</text>
+                    <path d="M190,151 L258,151" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+                    <text x="224" y="144" text-anchor="middle" font-size="10" fill-opacity="0.7">query</text>
+
+                    <!-- Guards -->
+                    <rect x="260" y="330" width="190" height="72" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55" stroke-dasharray="4 3"/>
+                    <text x="355" y="352" text-anchor="middle" font-weight="500">Guards</text>
+                    <text x="355" y="369" text-anchor="middle" fill-opacity="0.7">every number ∈ catalogue</text>
+                    <text x="355" y="386" text-anchor="middle" fill-opacity="0.7">red lines · demo toggle</text>
+                    <line x1="355" y1="290" x2="355" y2="328" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+
+                    <!-- Rule engine fallback -->
+                    <rect x="520" y="218" width="150" height="72" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-dasharray="2 3"/>
+                    <text x="595" y="242" text-anchor="middle" font-weight="500" fill-opacity="0.8">Rule engine</text>
+                    <text x="595" y="259" text-anchor="middle" fill-opacity="0.6">quote · order · escalate</text>
+                    <text x="595" y="276" text-anchor="middle" fill-opacity="0.6">if any provider is down</text>
+                    <line x1="470" y1="254" x2="518" y2="254" stroke="currentColor" stroke-opacity="0.35" stroke-dasharray="2 3" marker-end="url(#arr)"/>
+                    <text x="494" y="247" text-anchor="middle" font-size="10" fill-opacity="0.6">timeout</text>
+
+                    <!-- Column 3: execute -->
+                    <rect x="510" y="330" width="170" height="72" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
+                    <text x="595" y="352" text-anchor="middle" font-weight="500">Execute actions</text>
+                    <text x="595" y="369" text-anchor="middle" fill-opacity="0.7">pending order · proof ledger</text>
+                    <text x="595" y="386" text-anchor="middle" fill-opacity="0.7">state → persistent volume</text>
+                    <line x1="450" y1="366" x2="508" y2="366" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+
+                    <!-- Reply -->
+                    <rect x="700" y="330" width="140" height="54" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
+                    <text x="770" y="352" text-anchor="middle" font-weight="500">Reply to buyer</text>
+                    <text x="770" y="370" text-anchor="middle" fill-opacity="0.7">P95 &lt; 3 s</text>
+                    <line x1="680" y1="357" x2="698" y2="357" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+
+                    <!-- Async owner channel -->
+                    <rect x="510" y="440" width="170" height="72" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
+                    <text x="595" y="462" text-anchor="middle" font-weight="500">Owner notify</text>
+                    <text x="595" y="479" text-anchor="middle" fill-opacity="0.7">queue · daemon thread</text>
+                    <text x="595" y="496" text-anchor="middle" fill-opacity="0.7">18/min · WeCom · webhook</text>
+                    <line x1="595" y1="402" x2="595" y2="438" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+                    <text x="590" y="424" text-anchor="end" font-size="10" fill-opacity="0.7">push() returns at once</text>
+
+                    <!-- Owner brain -->
+                    <rect x="695" y="440" width="150" height="72" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
+                    <text x="770" y="462" text-anchor="middle" font-weight="500">Owner brain</text>
+                    <text x="770" y="479" text-anchor="middle" fill-opacity="0.7">approve · reprice · add</text>
+                    <text x="770" y="496" text-anchor="middle" fill-opacity="0.7">own prompt + permissions</text>
+                    <line x1="770" y1="438" x2="770" y2="386" stroke="currentColor" stroke-opacity="0.55" marker-end="url(#arr)"/>
+                    <text x="778" y="415" font-size="10" fill-opacity="0.7">owner replies</text>
+
+                    <!-- Background loops -->
+                    <rect x="20" y="440" width="430" height="72" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.35"/>
+                    <text x="235" y="462" text-anchor="middle" font-weight="500" fill-opacity="0.85">Background loop · every 5 min</text>
+                    <text x="235" y="479" text-anchor="middle" fill-opacity="0.65">follow-up: unpaid pending &gt; 120 min → one nudge (write-before-send)</text>
+                    <text x="235" y="496" text-anchor="middle" fill-opacity="0.65">daily 9-item audit of yesterday's conversations → owner report</text>
+                </g>
+            </svg>
+            <figcaption>Request path for one buyer turn. Solid boxes are on the reply path; the dashed box is the fallback when a provider times out; the owner channel is a separate thread so it can never slow the buyer.</figcaption>
+        </figure>
+
+        <h3>1 · Inbound and roles</h3>
+        <p>Each channel's webhook is verified, then folded into one message envelope: merchant, channel, user, role, and one of <code>text</code> / <code>image</code> / <code>voice</code>. Role is resolved before anything else — the owner is a whitelisted user id, everyone else is a buyer, and a per-merchant flag switches the buyer branch into factory mode (FOB tiers, MOQ, lead times, PI drafts). The owner and buyer paths never share a prompt: the owner brain has a different system prompt and a different set of permitted actions.</p>
+
+        <h3>2 · Media pre-pass</h3>
+        <p>Voice notes go through Whisper and re-enter as text. Images go through a vision model with a task-specific prompt and a confidence floor — below the floor the image is handed to the owner instead of interpreted. The classifier separates payment screenshots (→ pending payment proof), product photos (→ catalogue match), and spec sheets (→ factory quote). The vision provider is swappable by environment variable; a fallback model is configured.</p>
+
+        <h3>3 · Retrieval</h3>
+        <p>Catalogue lookup is a keyword and identifier table over the merchant's own product sheet, not an embedding index. The table is generated at import time from the merchant's Excel (each row becomes SKU, aliases, and a small keyword set), and matching is exact-first. A single-character keyword only fires when it sits next to an "asking for goods" signal, which stopped a class of false matches in Chinese. A miss returns a fixed "we don't carry that — here is what we do have" with the top three live items, so the model never has to improvise a product.</p>
+
+        <h3>4 · One model call, tagged output</h3>
+        <p><code>brain()</code> assembles the prompt from merchant facts, matched catalogue rows, the last few turns, and the three red lines, then makes one call. The model returns natural-language text plus zero or more action tags — <code>[ORDER:sku:qty]</code>, <code>[WAITLIST]</code>, <code>[ESCALATE]</code>. The tags are the only way the model can cause a side effect; everything else it says is just text.</p>
+
+        <h3>5 · Guards before send</h3>
+        <p>The reply is parsed, not trusted. Every number in it is checked against the matched catalogue rows; a number that isn't there is a hallucinated price and the reply is regenerated or replaced with an escalation. Red-line filters run on the text (stock counts, other buyers' prices, floor prices). A "demo catalogue" toggle lets a merchant hide sample products without the model seeing them at all. If the provider times out, the same guarded path runs on a rule engine that can quote, take an order and escalate — degraded, never silent.</p>
+
+        <h3>6 · Actions and state</h3>
+        <p>The service executes the tags. An order becomes a pending item with an id; a payment screenshot becomes an append-only proof record (<code>id / order / user / media / amount / status</code>) that approval or rejection only flips the status of — nothing is deleted. Per-merchant state is a JSON document on a persistent volume, written atomically after each turn.</p>
+
+        <h3>7 · Owner side, off the hot path</h3>
+        <p>Owner notifications are enqueued and delivered by a daemon thread over WeCom application messages or a webhook, with a token cache, an 18-per-minute limiter, and a mapping from provider error codes to one-line fixes ("IP not whitelisted → add the egress IP"). If both channels fail, delivery falls back to the customer-service channel inside its 48-hour window. The call to enqueue returns in microseconds, which is why adding owner notifications measured 4–5 ms on the buyer path instead of the 300–800 ms a synchronous call would have added. The owner replies in plain language — "approve #12", "raise A100 to 480", "add product", "authorise the risk profile" — and a separate owner brain turns that into state changes.</p>
+
+        <h3>8 · Background loops</h3>
+        <p>A five-minute loop runs the follow-up check: any pending order with no proof after 120 minutes gets exactly one nudge to the buyer and one line to the owner. The "followed-up" flag is written to disk <em>before</em> the message is sent, so a buyer replying in the same second can't cause a double nudge. A daily job re-reads yesterday's conversations against a nine-item audit (red-line violations, unanswered messages, quoting errors, escalation latency) and reports to the owner; a weekly roll-up follows.</p>
+
+        <h3>9 · Release</h3>
+        <p>Thirteen suites, 491 checks. The scenario gates are the important ones: scripted buyer conversations in Chinese and in factory mode, each with the expected action tags and the numbers the reply must and must not contain. Vision, import, notification, proof-and-follow-up, consent and cold-start each have their own suite; an end-to-end run starts the real server against fake platform credentials and drives it with Playwright. A release that fails any of them doesn't ship — including two of mine.</p>
 
         <h2>Decisions I would defend</h2>
 
