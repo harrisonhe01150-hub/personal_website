@@ -138,7 +138,7 @@ Sports & Other:
 
 ## YOUR CONTACT INFO (share when asked)
 
-- Phone: 0605443005
+- Phone: +1 (872) 369-5500
 - WeChat: Hydroticfly
 - Email: harrisonhe.01150@gmail.com
 - GitHub: harrisonhe01150-hub

@@ -233,7 +233,7 @@
         <p>A five-minute loop runs the follow-up check: any pending order with no proof after 120 minutes gets exactly one nudge to the buyer and one line to the owner. The "followed-up" flag is written to disk <em>before</em> the message is sent, so a buyer replying in the same second can't cause a double nudge. A daily job re-reads yesterday's conversations against a nine-item audit (red-line violations, unanswered messages, quoting errors, escalation latency) and reports to the owner; a weekly roll-up follows.</p>
 
         <h3>9 · Release</h3>
-        <p>Thirteen suites, 491 checks. The scenario gates are the important ones: scripted buyer conversations in Chinese and in factory mode, each with the expected action tags and the numbers the reply must and must not contain. Vision, import, notification, proof-and-follow-up, consent and cold-start each have their own suite; an end-to-end run starts the real server against fake platform credentials and drives it with Playwright. A release that fails any of them doesn't ship — including two of mine.</p>
+        <p>Fourteen suites, 590 checks. The scenario gates are the important ones: scripted buyer conversations in Chinese and in factory mode, each with the expected action tags and the numbers the reply must and must not contain. Vision, import, notification, proof-and-follow-up, consent, multi-tenancy and cold-start each have their own suite; an end-to-end run starts the real server against fake platform credentials and drives it with Playwright. A release that fails any of them doesn't ship — including two of mine.</p>
 
         <h2>Decisions I would defend</h2>
 
@@ -258,11 +258,11 @@
         </div>
 
         <h2>Testing and evaluation</h2>
-        <p>The system is released only through an automated gate: <strong>13 test suites, 491 checks</strong> — buyer scenario gates (Chinese and factory-mode), vision, catalogue import, owner notifications, payment-proof and follow-up, consent, cold start, plus Playwright end-to-end runs against a live server. The gate has blocked my own releases twice. In production, a daily nine-item audit reviews the previous day's conversations for red-line violations, unanswered messages and quoting errors, and reports to the owner.</p>
+        <p>The system is released only through an automated gate: <strong>14 test suites, 590 checks</strong> — buyer scenario gates (Chinese and factory-mode), vision, catalogue import, owner notifications, payment-proof and follow-up, consent, multi-tenancy, cold start, plus Playwright end-to-end runs against a live server. The gate has blocked my own releases twice. In production, a daily nine-item audit reviews the previous day's conversations for red-line violations, unanswered messages and quoting errors, and reports to the owner.</p>
         <p>The thing I care about most is the same thing I learned building a handwriting-grading system earlier: the interesting failures are quiet ones. A quoting assistant that is right 95% of the time and confidently wrong 5% of the time is worse than one that says "let me check with the owner" — so the evaluation work is about finding <em>where</em> the model fails and moving those cases out of its hands.</p>
 
         <div class="wu-grid">
-            <div class="wu-stat"><div class="n">491</div><div class="l">automated checks across 13 suites, all green before release</div></div>
+            <div class="wu-stat"><div class="n">590</div><div class="l">automated checks across 14 suites, all green before release</div></div>
             <div class="wu-stat"><div class="n">&lt; 3 s</div><div class="l">P95 end-to-end reply latency in production</div></div>
             <div class="wu-stat"><div class="n">3 wk → 2–3 d</div><div class="l">time to deploy a new merchant</div></div>
             <div class="wu-stat"><div class="n">≈ ¥100</div><div class="l">model and hosting cost per store per month, measured</div></div>
