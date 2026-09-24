@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Harrison He — Resume</title>
+<style>
+@page { size: Letter; margin: 0.42in 0.55in 0.4in 0.55in; }
+* { box-sizing: border-box; }
+body { font-family: "Liberation Serif", "Times New Roman", serif; font-size: 9.55pt; line-height: 1.19; color: #000; margin: 0; }
+a { color: #000; }
+.name { text-align: center; font-size: 19pt; font-weight: bold; margin: 0 0 2pt; }
+.contact { text-align: center; font-size: 8.9pt; white-space: nowrap; margin: 0 0 7pt; }
+h2 { font-size: 10pt; font-weight: bold; letter-spacing: 1.6pt; text-transform: uppercase; border-bottom: 0.9pt solid #000; padding-bottom: 1pt; margin: 6pt 0 3pt; }
+.row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 3.2pt; }
+.row b { font-size: 9.95pt; }
+.row .r { font-size: 9.3pt; white-space: nowrap; padding-left: 8pt; }
+.sub { font-style: italic; margin: 0 0 0.5pt; }
+ul { margin: 0.5pt 0 0; padding-left: 11pt; }
+li { margin: 0 0 1.4pt; padding-left: 1pt; }
+p { margin: 0 0 1.4pt; }
+code { font-family: "Liberation Mono", monospace; font-size: 8.6pt; }
+.cjk { font-family: "Noto Sans CJK SC", "Liberation Serif", serif; }
+</style></head><body>
+
+<div class="name">Harrison He</div>
+<div class="contact">Champaign, IL · Johannesburg, South Africa | +1 (872) 369-5500 | harrisonhe.01150@gmail.com | <a href="https://harrisonhe.com">harrisonhe.com</a> | <a href="https://github.com/harrisonhe01150-hub">github.com/harrisonhe01150-hub</a></div>
+
+<h2>Education</h2>
+<div class="row"><b>University of Illinois Urbana-Champaign</b><span class="r">Expected May 2030</span></div>
+<p class="sub">B.S. in Mathematics (transferring into Mathematics &amp; Computer Science)</p>
+<div class="row"><b>St John's College, Johannesburg</b><span class="r">Graduated 2025</span></div>
+<p class="sub">Cambridge A-Levels: A* Mathematics, A* Further Mathematics, A Physics, A Chinese, B Chemistry</p>
+
+<h2>Projects &amp; Experience</h2>
+
+<div class="row"><b>Founder &amp; Developer — <span class="cjk">店小力</span> Dianxiaoli, AI sales agent deployed for paying merchants</b><span class="r">Apr 2026 – Present · Remote</span></div>
+<p class="sub">Architecture, agent design and evaluation write-up: <a href="https://harrisonhe.com/dianxiaoli.html">harrisonhe.com/dianxiaoli.html</a></p>
+<ul>
+<li>Designed, built and operate, as a solo developer, an autonomous agent inside WeChat Customer Service and WhatsApp: it quotes from the merchant's own catalogue, negotiates, records orders, handles payment screenshots and escalates edge cases to the owner. <b>Live 24/7 for 3 paying merchants</b> in China and South Africa since April 2026.</li>
+<li><b>Safety enforced in code, not prompts:</b> a wrong price or a falsely confirmed payment ends a merchant relationship, so the hard constraints (no invented prices, no stock counts, no cross-customer prices, never confirm a payment) live in the pipeline: a post-model price guard voids any reply containing a price absent from the retrieved catalogue rows; payments advance only by owner action on an append-only proof ledger; a nightly audit replays production transcripts through 9 checks.</li>
+<li><b>Single source of truth for a store (Sep 2026):</b> multi-tenant routing by channel account; a staff role with per-field visibility (staff see the authorised floor, never cost or other customers' prices), price-change approval and enquiry tickets; four industry packs (wholesale stall / retail / factory / service) switched with one owner command; consent-gated merchant-health export (17 fields).</li>
+<li><b>Engineering and evaluation:</b> deterministic-first pipeline — a rule engine resolves SKU and quantity and the LLM handles only the unmatched path; one model call per turn emits tagged actions (<code>[ORDER]</code>, <code>[WAITLIST]</code>, <code>[ESCALATE]</code>) validated by a deterministic executor; owner notifications on background workers off the request path (P95 &lt; 3 s); <b>18 automated suites / 1,055 checks</b> gate every release (blocked my own releases twice). Replaced the first deployment's vector retrieval with exact identifier matching (similarity cannot distinguish adjacent model numbers). Python / FastAPI on Railway; per-merchant deployment cut from 3 weeks to 2–3 days.</li>
+</ul>
+
+<div class="row"><b>External Collaboration — Du Xiaoman Financial, AI Talent Programme (<span class="cjk">小满摘星计划</span>)</b><span class="r">Sep 2026 – Present · Remote</span></div>
+<ul>
+<li>Selected for Du Xiaoman's (Baidu's fintech arm) AI talent programme to develop a standardised, multi-tenant edition of Dianxiaoli for its small-business merchants. Lead product and engineering with two programme-assigned contributors; delivered the merchant-health data interface for the partner's risk models, the multi-tenant base and the industry packs ahead of the agreed roadmap.</li>
+</ul>
+
+<div class="row"><b>Incoming Intern — Allan Gray, Johannesburg</b><span class="r">Dec 2026</span></div>
+<ul>
+<li>Confirmed internship at one of South Africa's largest independent asset managers (role and dates to be confirmed).</li>
+</ul>
+
+<div class="row"><b>AI Study Tutor — handwritten past-paper grading</b><span class="r">2025 – Present</span></div>
+<ul>
+<li>Built an LLM pipeline (vision OCR → grading model → step-by-step explanation and new-problem generation) that marks a student's handwritten answer by logical validity, accepting any correct method. Python / FastAPI backend on Railway, Next.js frontend on Vercel.</li>
+<li><b>Audited model output by hand against a full paper: 9 of 15 AI marks were false negatives, all in the same direction.</b> Turned that failure mode into a 13-case regression suite that gates every change.</li>
+</ul>
+
+<div class="row"><b>Cambridge Research Project — regression analysis of cryptocurrency price series</b><span class="r">St John's College</span></div>
+
+<div class="row"><b>Actuarial Job Shadows — Discovery; Argen Actuarial Solutions</b><span class="r">Apr – May 2024 · Johannesburg</span></div>
+<ul>
+<li>Observed pricing models, risk assessment and actuarial valuations.</li>
+</ul>
+
+<h2>Achievements</h2>
+<ul>
+<li><b>South African Mathematics Olympiad:</b> 4th (2021), 7th (2022), Top 50 (2023), Top 20 (2024, 2025) nationally; South Africa IMO selection training camp, Stellenbosch University, 2021–2024.</li>
+<li><b>University of the Witwatersrand Mathematics Competition:</b> Top 10, 2023–2025. South Africa Team Maths Competition: 2nd place 2021–2024, 4th 2025. Estonian Maths Open: Top 20–50 within South Africa.</li>
+<li>South African Informatics Olympiad: first round passed 2023, 2024. Qualified Professional Level 1 Go player (China). 100+ hours volunteer tutoring in high-school mathematics and olympiad preparation, 2022–2025.</li>
+</ul>
+
+<h2>Skills</h2>
+<p><b>Programming:</b> Python (FastAPI, pandas), JavaScript / HTML / CSS (Next.js), Java, Git, Playwright; deployment and operations on Railway and Vercel.</p>
+<p><b>AI &amp; data engineering:</b> LLM agent design with DeepSeek, Anthropic and OpenAI APIs — tagged-action output, deterministic executors, rule-engine fallback, background workers, multi-tenant routing, role-based field visibility; evaluation gates, regression suites and transcript audits; consent-gated data export; WeChat and WhatsApp platform integration.</p>
+<p><b>Languages:</b> Mandarin and English (both fluent).</p>
+
+</body></html>

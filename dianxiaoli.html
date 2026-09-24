@@ -98,7 +98,7 @@
 
         <div class="wu-flow">
             <div class="wu-role"><b>Buyer</b><span>Asks for a price, negotiates, sends a payment screenshot, asks about shipping. Gets an answer in their language in seconds, from the merchant's own catalogue.</span></div>
-            <div class="wu-role"><b>Staff</b><span>Asks the same question a buyer would — and gets the fields a salesperson is allowed to see, without going through the owner. (Shipping in the next release.)</span></div>
+            <div class="wu-role"><b>Staff</b><span>Asks the same question a buyer would — and gets the fields a salesperson is allowed to see (the authorised floor, never cost or another buyer's price), with the time the price was last confirmed. Can propose a price change for the owner to approve, and raise an enquiry the owner answers once for everyone.</span></div>
             <div class="wu-role"><b>Owner</b><span>Approves orders and payments, updates prices, adds products, reads a daily report — in one-line plain-language messages.</span></div>
         </div>
 
@@ -108,10 +108,10 @@
             <li><strong>Lolawe Fashions</strong>, Johannesburg — fashion retail, with automated Instagram posting for new arrivals (measured 19 s from product photo to published post).</li>
             <li><strong>An office-equipment distributor</strong>, China — after-sales assistant over long-form product documentation, and an internal quote assistant for the sales team.</li>
         </ul>
-        <p>Each merchant runs on WeChat Customer Service or WhatsApp Business through the platforms' official APIs. Deployment for the first merchant took three weeks; it is now two to three days, using an industry "skill-pack" layer (wholesale stall / retail / factory) on a shared core.</p>
+        <p>Each merchant runs on WeChat Customer Service or WhatsApp Business through the platforms' official APIs. Deployment for the first merchant took three weeks; it is now two to three days, using an industry-pack layer (wholesale stall / retail / factory / service) on a shared core — the owner switches packs with one message, and every default can be overridden individually.</p>
 
         <h2>How a message moves through the system</h2>
-        <p>One FastAPI service, one process per merchant today (multi-tenant routing is the next release). Everything below is deterministic Python around exactly one model call per turn; the model produces text and a small set of tagged actions, and the service decides what to do with them.</p>
+        <p>One FastAPI service serving many merchants, each request routed to its store by the channel account it arrived on (multi-tenant since September 2026). Everything below is deterministic Python around exactly one model call per turn; the model produces text and a small set of tagged actions, and the service decides what to do with them.</p>
 
         <figure class="wu-fig">
             <svg viewBox="0 0 860 530" role="img" aria-label="Request path: a buyer message enters from WeChat or WhatsApp, is normalised and role-resolved, media is transcribed or read by a vision model, the catalogue is queried by exact identifier, the language model drafts a reply with action tags, guards check the reply, then the service executes actions, replies to the buyer, and queues an owner notification on a separate thread.">
@@ -128,7 +128,7 @@
 
                     <rect x="20" y="124" width="170" height="54" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
                     <text x="105" y="146" text-anchor="middle" font-weight="500">Normalise + role</text>
-                    <text x="105" y="164" text-anchor="middle" fill-opacity="0.7">buyer · owner · factory mode</text>
+                    <text x="105" y="164" text-anchor="middle" fill-opacity="0.7">buyer · staff · owner</text>
 
                     <rect x="20" y="218" width="170" height="54" rx="2" fill="none" stroke="currentColor" stroke-opacity="0.55"/>
                     <text x="105" y="240" text-anchor="middle" font-weight="500">Media pre-pass</text>
@@ -209,7 +209,7 @@
         </figure>
 
         <h3>1 · Inbound and roles</h3>
-        <p>Each channel's webhook is verified, then folded into one message envelope: merchant, channel, user, role, and one of <code>text</code> / <code>image</code> / <code>voice</code>. Role is resolved before anything else — the owner is a whitelisted user id, everyone else is a buyer, and a per-merchant flag switches the buyer branch into factory mode (FOB tiers, MOQ, lead times, PI drafts). The owner and buyer paths never share a prompt: the owner brain has a different system prompt and a different set of permitted actions.</p>
+        <p>Each channel's webhook is verified, then folded into one message envelope: merchant, channel, user, role, and one of <code>text</code> / <code>image</code> / <code>voice</code>. Role is resolved before anything else — the owner is a whitelisted user id, staff are users who joined with a one-time code the owner issued, everyone else is a buyer; the merchant's industry pack (wholesale stall / retail / factory / service) sets the defaults for the buyer branch, and factory mode adds FOB tiers, MOQ, lead times and PI drafts. The three paths never share a prompt: the staff path is fully deterministic (no model call — it reads the catalogue through a field-visibility table), and the owner brain has its own system prompt and its own set of permitted actions.</p>
 
         <h3>2 · Media pre-pass</h3>
         <p>Voice notes go through Whisper and re-enter as text. Images go through a vision model with a task-specific prompt and a confidence floor — below the floor the image is handed to the owner instead of interpreted. The classifier separates payment screenshots (→ pending payment proof), product photos (→ catalogue match), and spec sheets (→ factory quote). The vision provider is swappable by environment variable; a fallback model is configured.</p>
@@ -233,7 +233,7 @@
         <p>A five-minute loop runs the follow-up check: any pending order with no proof after 120 minutes gets exactly one nudge to the buyer and one line to the owner. The "followed-up" flag is written to disk <em>before</em> the message is sent, so a buyer replying in the same second can't cause a double nudge. A daily job re-reads yesterday's conversations against a nine-item audit (red-line violations, unanswered messages, quoting errors, escalation latency) and reports to the owner; a weekly roll-up follows.</p>
 
         <h3>9 · Release</h3>
-        <p>Fourteen suites, 590 checks. The scenario gates are the important ones: scripted buyer conversations in Chinese and in factory mode, each with the expected action tags and the numbers the reply must and must not contain. Vision, import, notification, proof-and-follow-up, consent, multi-tenancy and cold-start each have their own suite; an end-to-end run starts the real server against fake platform credentials and drives it with Playwright. A release that fails any of them doesn't ship — including two of mine.</p>
+        <p>Eighteen suites, 1,055 checks. The scenario gates are the important ones: scripted buyer conversations in Chinese and in factory mode, each with the expected action tags and the numbers the reply must and must not contain. Vision, import, notification, proof-and-follow-up, consent, multi-tenancy, the staff role and workbench, aliases and invoicing, industry packs and cold-start each have their own suite; several of them start the previous release in a subprocess and compare buyer replies word for word, so a change to a default can't silently alter what an existing store says; an end-to-end run starts the real server against fake platform credentials and drives it with Playwright. A release that fails any of them doesn't ship — including two of mine.</p>
 
         <h2>Decisions I would defend</h2>
 
@@ -258,11 +258,11 @@
         </div>
 
         <h2>Testing and evaluation</h2>
-        <p>The system is released only through an automated gate: <strong>14 test suites, 590 checks</strong> — buyer scenario gates (Chinese and factory-mode), vision, catalogue import, owner notifications, payment-proof and follow-up, consent, multi-tenancy, cold start, plus Playwright end-to-end runs against a live server. The gate has blocked my own releases twice. In production, a daily nine-item audit reviews the previous day's conversations for red-line violations, unanswered messages and quoting errors, and reports to the owner.</p>
+        <p>The system is released only through an automated gate: <strong>18 test suites, 1,055 checks</strong> — buyer scenario gates (Chinese and factory-mode), vision, catalogue import, owner notifications, payment-proof and follow-up, consent, multi-tenancy, staff role and workbench, aliases and invoicing, industry packs, cold start, plus Playwright end-to-end runs against a live server. The gate has blocked my own releases twice. In production, a daily nine-item audit reviews the previous day's conversations for red-line violations, unanswered messages and quoting errors, and reports to the owner.</p>
         <p>The thing I care about most is the same thing I learned building a handwriting-grading system earlier: the interesting failures are quiet ones. A quoting assistant that is right 95% of the time and confidently wrong 5% of the time is worse than one that says "let me check with the owner" — so the evaluation work is about finding <em>where</em> the model fails and moving those cases out of its hands.</p>
 
         <div class="wu-grid">
-            <div class="wu-stat"><div class="n">590</div><div class="l">automated checks across 14 suites, all green before release</div></div>
+            <div class="wu-stat"><div class="n">1,055</div><div class="l">automated checks across 18 suites, all green before release</div></div>
             <div class="wu-stat"><div class="n">&lt; 3 s</div><div class="l">P95 end-to-end reply latency in production</div></div>
             <div class="wu-stat"><div class="n">3 wk → 2–3 d</div><div class="l">time to deploy a new merchant</div></div>
             <div class="wu-stat"><div class="n">≈ ¥100</div><div class="l">model and hosting cost per store per month, measured</div></div>
@@ -272,7 +272,8 @@
         <ul>
             <li><strong>April 2026</strong> — first merchant live, solo-built.</li>
             <li><strong>September 2026</strong> — selected for <strong>Du Xiaoman Financial</strong>'s (Baidu's fintech arm) AI talent programme, 小满摘星计划, to develop a standardised edition for its small-business merchants under an external collaboration; two programme-assigned contributors on an isolated onboarding module.</li>
-            <li><strong>Next</strong> — multi-tenant core (one deployment serving many stores, routed by customer-service account), then the staff role with a field-level visibility table so a price change reaches everyone who is allowed to see it, at once, with a timestamp.</li>
+            <li><strong>September 2026</strong> — multi-tenant core (one deployment serving many stores, routed by channel account); the staff role with a field-level visibility table, so a price change reaches everyone allowed to see it at once, with a timestamp; staff price-change proposals the owner approves in one word, and enquiry tickets answered once for the whole team; four industry packs switched with a single owner message.</li>
+            <li><strong>Next</strong> — an installer-facing onboarding tool so a new store goes live in under an hour without the owner learning anything; payment-provider webhooks to close the approval loop without screenshots; an after-sales pack for service businesses.</li>
         </ul>
 
         <div class="wu-meta">
