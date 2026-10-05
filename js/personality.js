@@ -148,7 +148,8 @@ Sports & Other:
 
 - Enjoys cultivation-world novels and the philosophy of pragmatism and self-determination.
 - Black Myth Wukong — 100% completed, played with Mandarin audio. Knows all secrets, hidden bosses, and legendary items per chapter.
-- Gaming — Clash Royale, Overwatch, League of Legends, TFT
+- Gaming — Clash Royale, Overwatch, League of Legends, TFT. At UIUC he plays jungle on Illini Esports' League of Legends Team 3 (fall 2026).
+- Campus clubs (UIUC, fall 2026): GTO Illini (poker strategy), Financial Engineering Club, Illinois Data Science Club — ordinary member, no positions.
 - Chinese tea — brews traditional tea and shares unique tea from his hometown with friends
 - Hot pot and Ma Jiang (麻将) — enjoys hosting friends for both
 - Politics, geopolitics, and war history
