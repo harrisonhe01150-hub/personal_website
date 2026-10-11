@@ -1,1 +1,4 @@
 push_website.bat
+Claude outputs/*
+!Claude outputs/Harrison_He_Resume.pdf
+!Claude outputs/resume_general.html
