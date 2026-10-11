@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harrison He - Mathematics &amp; AI</title>
+    <title data-i18n="meta.title">Harrison He - Mathematics &amp; AI</title>
     <meta name="description" content="Personal portfolio of Harrison He - Mathematics student at UIUC, maths olympiad medalist, and builder of practical AI tools for small businesses.">
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>青</text></svg>">
@@ -36,6 +36,11 @@
         .qing-tooltip::after { content: ''; position: absolute; right: -6px; bottom: 4px; border-width: 6px 0 6px 6px; border-style: solid; border-color: transparent transparent transparent rgba(184, 168, 154, 0.4); }
         .qing-notif-dot { position: absolute; top: -2px; right: -2px; width: 14px; height: 14px; background-color: #ff4757; border-radius: 50%; opacity: 0; transition: opacity 0.3s ease; border: 2px solid #141414; }
         .qing-notif-dot.show { opacity: 1; animation: pulseNotif 2s infinite; }
+        /* EN / 中文 toggle */
+        .lang-toggle { background: transparent; color: var(--text-secondary); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 2px; padding: 0.4rem 0.9rem; font-family: var(--font-main); font-size: 0.8rem; letter-spacing: 1px; cursor: pointer; transition: var(--transition-smooth); line-height: 1.2; }
+        .lang-toggle:hover { color: var(--text-primary); border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+        html[lang="zh-CN"] body { font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', 'Noto Sans SC', sans-serif; }
+        html[lang="zh-CN"] .logo, html[lang="zh-CN"] .btn, html[lang="zh-CN"] .nav-links a, html[lang="zh-CN"] .btn-primary-small { letter-spacing: 1px; }
         @keyframes pulseNotif {
             0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
             70% { box-shadow: 0 0 0 8px rgba(255, 71, 87, 0); }
@@ -52,11 +57,12 @@
                 <span></span><span></span><span></span>
             </button>
             <ul class="nav-links" id="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#education">Education</a></li>
-                <li><a href="#achievements">Achievements</a></li>
-                <li><a href="#contact" class="btn-primary-small">Let's Talk</a></li>
+                <li><a href="#about" data-i18n="nav.about">About</a></li>
+                <li><a href="#experience" data-i18n="nav.experience">Experience</a></li>
+                <li><a href="#education" data-i18n="nav.education">Education</a></li>
+                <li><a href="#achievements" data-i18n="nav.achievements">Achievements</a></li>
+                <li><a href="#contact" class="btn-primary-small" data-i18n="nav.talk">Let's Talk</a></li>
+                <li><button type="button" class="lang-toggle" id="lang-toggle" aria-label="切换到中文" data-i18n-aria="lang.aria" data-i18n="lang.label">中文</button></li>
             </ul>
         </div>
     </nav>
@@ -64,11 +70,11 @@
     <!-- Hero Section -->
     <header id="hero" class="section">
         <div class="container hero-content">
-            <h1 class="hero-title animate-up">Hello, I'm <span class="gradient-text">Harrison He</span>.</h1>
-            <p class="hero-subtitle animate-up delay-1">Mathematics @ UIUC '30 · Maths olympiad medalist</p>
+            <h1 class="hero-title animate-up" data-i18n="hero.title">Hello, I'm <span class="gradient-text">Harrison He</span>.</h1>
+            <p class="hero-subtitle animate-up delay-1" data-i18n="hero.subtitle">Mathematics @ UIUC '30 · Maths olympiad medalist</p>
             <div class="hero-cta animate-up delay-2">
-                <a href="#experience" class="btn btn-primary">View My Experience</a>
-                <a href="material/resume.pdf" class="btn btn-outline" target="_blank" rel="noopener">Download Resume</a>
+                <a href="#experience" class="btn btn-primary" data-i18n="hero.cta1">View My Experience</a>
+                <a href="material/resume.pdf" class="btn btn-outline" target="_blank" rel="noopener" data-i18n="hero.cta2">Download Resume</a>
             </div>
         </div>
     </header>
@@ -76,21 +82,21 @@
     <!-- About Section -->
     <section id="about" class="section">
         <div class="container">
-            <h2 class="section-title animate-up">About Me</h2>
+            <h2 class="section-title animate-up" data-i18n="about.title">About Me</h2>
             <div class="about-grid">
                 <div class="about-text animate-up delay-1">
-                    <p>I'm Harrison He. Although my academic path points toward Mathematics and Computer Science at the <strong>University of Illinois Urbana-Champaign</strong>, my identity extends far beyond the classroom. As an <strong>INTJ</strong>, I naturally approach challenges with analytical thinking and objective logic, yet I am equally driven by a deep curiosity to experience life from multiple perspectives.</p>
-                    <p>I thrive on staying active and exploring new environments—whether I'm scaling a climbing wall, hiking a scenic trail, playing badminton, or unraveling puzzles in an escape room. When it's time to decompress, you will often find me listening to music, brewing traditional Chinese tea, getting lost in web novels, or jumping into a match of <em>League of Legends</em>.</p>
+                    <p data-i18n="about.p1">I'm Harrison He. Although my academic path points toward Mathematics and Computer Science at the <strong>University of Illinois Urbana-Champaign</strong>, my identity extends far beyond the classroom. As an <strong>INTJ</strong>, I naturally approach challenges with analytical thinking and objective logic, yet I am equally driven by a deep curiosity to experience life from multiple perspectives.</p>
+                    <p data-i18n="about.p2">I thrive on staying active and exploring new environments—whether I'm scaling a climbing wall, hiking a scenic trail, playing badminton, or unraveling puzzles in an escape room. When it's time to decompress, you will often find me listening to music, brewing traditional Chinese tea, getting lost in web novels, or jumping into a match of <em>League of Legends</em>.</p>
                 </div>
                 <div class="about-ink-art animate-up delay-2">
                     <div class="about-stats">
                         <div class="stat-card">
                             <h3>A*A*</h3>
-                            <p>Maths &amp; Further Maths</p>
+                            <p data-i18n="about.stat1">Maths &amp; Further Maths</p>
                         </div>
                         <div class="stat-card">
                             <h3>100+</h3>
-                            <p>Hours Community Service</p>
+                            <p data-i18n="about.stat2">Hours Community Service</p>
                         </div>
                     </div>
                 </div>
@@ -101,38 +107,38 @@
     <!-- Experience Section -->
     <section id="experience" class="section">
         <div class="container">
-            <h2 class="section-title animate-up">Experience</h2>
+            <h2 class="section-title animate-up" data-i18n="exp.title">Experience</h2>
             <div class="timeline">
                 <div class="timeline-item animate-up delay-1">
                     <div class="timeline-icon">&#x1F680;</div>
                     <div class="timeline-content">
-                        <h3>Founder &amp; Developer</h3>
-                        <p class="timeline-company"><a href="dianxiaoli.html" title="Technical write-up" style="border-bottom: 1px solid rgba(205,213,220,0.35);">店小力 · Dianxiaoli — AI Digital Shop Assistant</a> <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| April 2026 – Present</span></p>
-                        <p class="timeline-desc">Built and run an AI shop assistant that lives inside WeChat Customer Service and WhatsApp for wholesalers, factories and retailers: it answers buyers around the clock in their language, quotes from the shop's own catalogue, confirms orders and hands them back to the owner. Live with three paying clients across China and South Africa; shipped as a solo developer with an 18-suite, 1,055-check automated quality gate and model routing across DeepSeek, Anthropic and OpenAI; multi-tenant, with a staff role and four industry packs since September 2026. <a href="dianxiaoli.html" style="color: var(--accent-mist); border-bottom: 1px solid rgba(205,213,220,0.35); white-space: nowrap;">Read the technical write-up →</a></p>
+                        <h3 data-i18n="exp.dxl.role">Founder &amp; Developer</h3>
+                        <p class="timeline-company" data-i18n="exp.dxl.company"><a href="dianxiaoli.html" title="Technical write-up" style="border-bottom: 1px solid rgba(205,213,220,0.35);">店小力 · Dianxiaoli — AI Digital Shop Assistant</a> <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| April 2026 – Present</span></p>
+                        <p class="timeline-desc" data-i18n="exp.dxl.desc">Built and run an AI shop assistant that lives inside WeChat Customer Service and WhatsApp for wholesalers, factories and retailers: it answers buyers around the clock in their language, quotes from the shop's own catalogue, confirms orders and hands them back to the owner. Live with three paying clients across China and South Africa; shipped as a solo developer with a 21-suite, 1,458-check automated quality gate (23 versioned releases since May 2026) and model routing across DeepSeek, Anthropic and OpenAI; multi-tenant, with a staff role and four industry packs since September 2026. <a href="dianxiaoli.html" style="color: var(--accent-mist); border-bottom: 1px solid rgba(205,213,220,0.35); white-space: nowrap;">Read the technical write-up →</a></p>
                     </div>
                 </div>
                 <div class="timeline-item animate-up delay-2">
                     <div class="timeline-icon">&#x1F91D;</div>
                     <div class="timeline-content">
-                        <h3>External AI Product Collaboration — AI Talent Programme (小满摘星计划)</h3>
-                        <p class="timeline-company">Du Xiaoman Financial (Baidu's fintech arm) <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| September 2026 – Present</span></p>
-                        <p class="timeline-desc">Selected for Du Xiaoman's AI talent programme to develop a standardised, multi-tenant edition of Dianxiaoli for its small-business merchants under an external-collaboration arrangement — leading product and engineering with two programme-assigned contributors, and designing the consent-gated merchant-data interface with the partner's team. A joint company is planned once the product reaches scale.</p>
+                        <h3 data-i18n="exp.dxm.role">External AI Product Collaboration — AI Talent Programme (小满摘星计划)</h3>
+                        <p class="timeline-company" data-i18n="exp.dxm.company">Du Xiaoman Financial (Baidu's fintech arm) <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| September 2026 – Present</span></p>
+                        <p class="timeline-desc" data-i18n="exp.dxm.desc">Shortlisted for Du Xiaoman's enterprise brief in the 2026 AI Pioneer Future Talent Competition (see Achievements), then selected for its AI talent programme to develop a standardised, multi-tenant edition of Dianxiaoli for its small-business merchants under an external-collaboration arrangement — leading product and engineering with two programme-assigned contributors, and designing the consent-gated merchant-data interface with the partner's team. A joint company is planned once the product reaches scale.</p>
                     </div>
                 </div>
                 <div class="timeline-item animate-up delay-3">
                     <div class="timeline-icon">&#x1F4BC;</div>
                     <div class="timeline-content">
-                        <h3>Actuarial Job Shadow</h3>
-                        <p class="timeline-company">Discovery <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| April 2024</span></p>
-                        <p class="timeline-desc">Shadowed practising actuaries, gaining first-hand insight into risk assessment, pricing models, and the day-to-day responsibilities within one of South Africa's largest financial services groups.</p>
+                        <h3 data-i18n="exp.shadow.role">Actuarial Job Shadow</h3>
+                        <p class="timeline-company" data-i18n="exp.disc.company">Discovery <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| April 2024</span></p>
+                        <p class="timeline-desc" data-i18n="exp.disc.desc">Shadowed practising actuaries, gaining first-hand insight into risk assessment, pricing models, and the day-to-day responsibilities within one of South Africa's largest financial services groups.</p>
                     </div>
                 </div>
                 <div class="timeline-item animate-up delay-4">
                     <div class="timeline-icon">&#x1F4BC;</div>
                     <div class="timeline-content">
-                        <h3>Actuarial Job Shadow</h3>
-                        <p class="timeline-company">Argen Actuarial Solution <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| May 2024</span></p>
-                        <p class="timeline-desc">Observed actuarial consulting in action, learning about actuarial valuations, financial modelling, and client advisory services at a specialist actuarial consultancy.</p>
+                        <h3 data-i18n="exp.shadow.role">Actuarial Job Shadow</h3>
+                        <p class="timeline-company" data-i18n="exp.argen.company">Argen Actuarial Solution <span style="font-size: 0.9em; opacity: 0.7; font-weight: normal; margin-left: 10px;">| May 2024</span></p>
+                        <p class="timeline-desc" data-i18n="exp.argen.desc">Observed actuarial consulting in action, learning about actuarial valuations, financial modelling, and client advisory services at a specialist actuarial consultancy.</p>
                     </div>
                 </div>
             </div>
@@ -142,33 +148,33 @@
     <!-- Education Section -->
     <section id="education" class="section">
         <div class="container">
-            <h2 class="section-title animate-up">Education</h2>
+            <h2 class="section-title animate-up" data-i18n="edu.title">Education</h2>
             <div class="education-grid">
                 <!-- University -->
                 <div class="edu-card animate-up delay-1">
                     <div class="edu-icon">&#x1F393;</div>
                     <div class="edu-header">
-                        <h3>University of Illinois Urbana-Champaign</h3>
-                        <span class="edu-date">Expected Graduation: 2030</span>
+                        <h3 data-i18n="edu.uiuc.name">University of Illinois Urbana-Champaign</h3>
+                        <span class="edu-date" data-i18n="edu.uiuc.date">Expected Graduation: 2030</span>
                     </div>
-                    <p class="edu-degree">Bachelor's Degree in Mathematics</p>
-                    <p class="edu-note">Transferring into Mathematics &amp; Computer Science</p>
+                    <p class="edu-degree" data-i18n="edu.uiuc.degree">Bachelor's Degree in Mathematics</p>
+                    <p class="edu-note" data-i18n="edu.uiuc.note">Transferring into Mathematics &amp; Computer Science</p>
                 </div>
                 <!-- High School -->
                 <div class="edu-card animate-up delay-2">
                     <div class="edu-icon">&#x1F3EB;</div>
                     <div class="edu-header">
-                        <h3>St John's College</h3>
-                        <span class="edu-date">Graduated &mdash; A Levels</span>
+                        <h3 data-i18n="edu.sjc.name">St John's College</h3>
+                        <span class="edu-date" data-i18n="edu.sjc.date">Graduated &mdash; A Levels</span>
                     </div>
-                    <p class="edu-degree">Cambridge A-Level Programme</p>
-                    <p class="edu-note">Transferred from Crawford College Sandton (4 years) to St John's College for A-Level study.</p>
+                    <p class="edu-degree" data-i18n="edu.sjc.degree">Cambridge A-Level Programme</p>
+                    <p class="edu-note" data-i18n="edu.sjc.note">Transferred from Crawford College Sandton (4 years) to St John's College for A-Level study.</p>
                     <div class="grade-chips">
-                        <span class="chip chip-star">A* Mathematics</span>
-                        <span class="chip chip-star">A* Further Maths</span>
-                        <span class="chip chip-a">A Chinese</span>
-                        <span class="chip chip-a">A Physics</span>
-                        <span class="chip chip-b">B Chemistry</span>
+                        <span class="chip chip-star" data-i18n="edu.chip.maths">A* Mathematics</span>
+                        <span class="chip chip-star" data-i18n="edu.chip.fm">A* Further Maths</span>
+                        <span class="chip chip-a" data-i18n="edu.chip.chinese">A Chinese</span>
+                        <span class="chip chip-a" data-i18n="edu.chip.physics">A Physics</span>
+                        <span class="chip chip-b" data-i18n="edu.chip.chem">B Chemistry</span>
                     </div>
                 </div>
             </div>
@@ -178,88 +184,111 @@
     <!-- Projects & Achievements Section -->
     <section id="achievements" class="section">
         <div class="container">
-            <h2 class="section-title animate-up">Projects &amp; Achievements</h2>
+            <h2 class="section-title animate-up" data-i18n="ach.title">Projects &amp; Achievements</h2>
 
             <!-- Project -->
             <div class="achievement-category animate-up delay-1">
-                <h3 class="category-title">&#x1F5A5;&#xFE0F; Projects</h3>
+                <h3 class="category-title" data-i18n="ach.proj.title">&#x1F5A5;&#xFE0F; Projects</h3>
                 <div class="achievement-list">
                     <div class="achievement-item">
                         <span class="achievement-badge badge-project">STARTUP</span>
-                        <p>店小力 · Dianxiaoli &mdash; a single source of truth for a small merchant's prices, stock and orders that buyers, staff and the owner all query through the chat app they already use. Quotes, negotiates, records orders and handles payment screenshots, with the safety rules enforced in code rather than prompts. Solo-built; live with three paying merchants on two continents. <a href="dianxiaoli.html" style="color: var(--accent-mist); border-bottom: 1px solid rgba(205,213,220,0.35); white-space: nowrap;">Technical write-up →</a></p>
+                        <p data-i18n="ach.proj.dxl">店小力 · Dianxiaoli &mdash; a single source of truth for a small merchant's prices, stock and orders that buyers, staff and the owner all query through the chat app they already use. Quotes, negotiates, records orders and handles payment screenshots, with the safety rules enforced in code rather than prompts. Solo-built; live with three paying merchants on two continents. <a href="dianxiaoli.html" style="color: var(--accent-mist); border-bottom: 1px solid rgba(205,213,220,0.35); white-space: nowrap;">Technical write-up →</a></p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-project">AI TOOL</span>
-                        <p>Built an AI study tutor that reads a student's handwritten past-paper answer, grades it by logic (accepting any valid method), explains mistakes step-by-step, and generates fresh practice problems on the spot.</p>
+                        <p data-i18n="ach.proj.tutor">Built an AI study tutor that reads a student's handwritten past-paper answer, grades it by logic (accepting any valid method), explains mistakes step-by-step, and generates fresh practice problems on the spot.</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-project">WEB</span>
-                        <p>Built this personal website from scratch (HTML, CSS &amp; JavaScript) &mdash; including 青, the AI land-spirit chat.</p>
+                        <p data-i18n="ach.proj.web">Built this personal website from scratch (HTML, CSS &amp; JavaScript) &mdash; including 青, the AI land-spirit chat.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI & Entrepreneurship -->
+            <div class="achievement-category animate-up delay-1">
+                <h3 class="category-title" data-i18n="ach.ai.title">&#x1F916; AI &amp; Entrepreneurship</h3>
+                <div class="achievement-list">
+                    <div class="achievement-item">
+                        <span class="achievement-badge badge-gold">FEISHU 2026</span>
+                        <p data-i18n="ach.ai.feishu">2026 AI Pioneer Future Talent Competition (AI 先锋未来人才大赛 &mdash; Feishu/ByteDance with a PKU&ndash;Fudan&ndash;SYSU&ndash;XJTU alliance; 109 enterprise briefs) &mdash; entered solo with 店小力 · Dianxiaoli; shortlisted for both the Du Xiaoman and Tec-Do (钛动) enterprise briefs, and built a coached deployment and demo for each (Jul&ndash;Aug 2026).</p>
+                    </div>
+                    <div class="achievement-item">
+                        <span class="achievement-badge badge-silver" data-i18n="badge.inprogress">IN PROGRESS</span>
+                        <p data-i18n="ach.ai.loreal">L'Or&eacute;al Beauty Tech Hackathon 2026 (2nd edition, on Alibaba Tianchi) &mdash; team entry on the content-authenticity track; building the ruling pipeline, agents, web UI and the image-forensics line.</p>
+                    </div>
+                    <div class="achievement-item">
+                        <span class="achievement-badge badge-silver" data-i18n="badge.inprogress">IN PROGRESS</span>
+                        <p data-i18n="ach.ai.unity">Unity Developer Challenge 2026 (Codely+ track) &mdash; team game 余数 / REMAINDER; building the game's runtime platform and integrating the team's parts.</p>
+                    </div>
+                    <div class="achievement-item">
+                        <span class="achievement-badge badge-silver" data-i18n="badge.inprogress">IN PROGRESS</span>
+                        <p data-i18n="ach.ai.gosim">GOSIM Agentic Observer Hackathon 2026 (智能体巡天黑客松) &mdash; entry in progress.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Maths Competitions -->
             <div class="achievement-category animate-up delay-1">
-                <h3 class="category-title">&#x1F3C6; Mathematics Competitions</h3>
+                <h3 class="category-title" data-i18n="ach.math.title">&#x1F3C6; Mathematics Competitions</h3>
                 <div class="achievement-list">
                     <div class="achievement-item">
                         <span class="achievement-badge badge-gold">SAMO</span>
-                        <p>South African Maths Olympiad &mdash; 4th (2021), 7th (2022), Top 50 (2023), Top 20 (2024), Top 20 (2025)</p>
+                        <p data-i18n="ach.math.samo">South African Maths Olympiad &mdash; 4th (2021), 7th (2022), Top 50 (2023), Top 20 (2024), Top 20 (2025)</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-gold">WITS</span>
-                        <p>Top 10 in University of Wits Maths Competition &mdash; 2023 to 2025 (Continental level)</p>
+                        <p data-i18n="ach.math.wits">Top 10 in University of Wits Maths Competition &mdash; 2023 to 2025 (Continental level)</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-silver">TEAM</span>
-                        <p>2nd place in South Africa Team Maths Competition &mdash; 2021 to 2024; 4th in 2025</p>
+                        <p data-i18n="ach.math.team">2nd place in South Africa Team Maths Competition &mdash; 2021 to 2024; 4th in 2025</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-bronze">EMO</span>
-                        <p>Ranked Top 20&ndash;50 in the Estonia Maths Open within South Africa</p>
+                        <p data-i18n="ach.math.emo">Ranked Top 20&ndash;50 in the Estonia Maths Open within South Africa</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-gold">IMO</span>
-                        <p>Attended South Africa IMO Selection Training Camp at Stellenbosch University &mdash; 2021 to 2024</p>
+                        <p data-i18n="ach.math.imo">Attended South Africa IMO Selection Training Camp at Stellenbosch University &mdash; 2021 to 2024</p>
                     </div>
                 </div>
             </div>
 
             <!-- Informatics -->
             <div class="achievement-category animate-up delay-2">
-                <h3 class="category-title">&#x1F4BB; Informatics</h3>
+                <h3 class="category-title" data-i18n="ach.info.title">&#x1F4BB; Informatics</h3>
                 <div class="achievement-list">
                     <div class="achievement-item">
                         <span class="achievement-badge badge-silver">SAIO</span>
-                        <p>Passed the first round of South Africa Informatics Olympiad &mdash; 2023 &amp; 2024</p>
+                        <p data-i18n="ach.info.saio">Passed the first round of South Africa Informatics Olympiad &mdash; 2023 &amp; 2024</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-silver">EIO</span>
-                        <p>Attended Estonian Informatics Open &mdash; Top 15 within South Africa</p>
+                        <p data-i18n="ach.info.eio">Attended Estonian Informatics Open &mdash; Top 15 within South Africa</p>
                     </div>
                 </div>
             </div>
 
             <!-- Sports & Other -->
             <div class="achievement-category animate-up delay-2">
-                <h3 class="category-title">&#x1F94B; Sports &amp; Other</h3>
+                <h3 class="category-title" data-i18n="ach.sport.title">&#x1F94B; Sports &amp; Other</h3>
                 <div class="achievement-list">
                     <div class="achievement-item">
                         <span class="achievement-badge badge-bronze">SWIM</span>
-                        <p>Level 2 Swimmer in South Africa</p>
+                        <p data-i18n="ach.sport.swim">Level 2 Swimmer in South Africa</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-gold">GO</span>
-                        <p>Qualified Professional Level 1 Go Player in China</p>
+                        <p data-i18n="ach.sport.go">Qualified Professional Level 1 Go Player in China</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-gold">TKD</span>
-                        <p>Black Belt in Taekwondo</p>
+                        <p data-i18n="ach.sport.tkd">Black Belt in Taekwondo</p>
                     </div>
                     <div class="achievement-item">
                         <span class="achievement-badge badge-bronze">LOL</span>
-                        <p>Jungler on Illini Esports League of Legends Team 3 at UIUC</p>
+                        <p data-i18n="ach.sport.lol">Jungler on Illini Esports League of Legends Team 3 at UIUC</p>
                     </div>
                 </div>
             </div>
@@ -269,16 +298,16 @@
     <!-- Contact Section -->
     <section id="contact" class="section">
         <div class="container contact-container animate-up">
-            <h2 class="section-title text-center">Let's Connect</h2>
-            <p class="contact-text text-center">I'm always open to new opportunities in actuarial science, AI, machine learning engineering, quantitative finance, mathematics, and technology. Whether you have a question or just want to say hi, feel free to reach out!</p>
+            <h2 class="section-title text-center" data-i18n="contact.title">Let's Connect</h2>
+            <p class="contact-text text-center" data-i18n="contact.text">I'm always open to new opportunities in actuarial science, AI, machine learning engineering, quantitative finance, mathematics, and technology. Whether you have a question or just want to say hi, feel free to reach out!</p>
             <div class="contact-details">
                 <div class="contact-item">
                     <span class="contact-icon">&#x1F4CD;</span>
-                    <p>Johannesburg, South Africa</p>
+                    <p data-i18n="contact.location">Johannesburg, South Africa</p>
                 </div>
                 <div class="contact-item">
                     <span class="contact-icon">&#x1F4DE;</span>
-                    <p>+1 (872) 369-5500</p>
+                    <p data-i18n="contact.phone">+1 (217) 202-6283</p>
                 </div>
                 <div class="contact-item">
                     <span class="contact-icon">&#x2709;&#xFE0F;</span>
@@ -290,15 +319,15 @@
                 </div>
             </div>
             <div class="contact-cta">
-                <a href="mailto:harrisonhe.01150@gmail.com" class="btn btn-primary btn-large">Say Hello</a>
+                <a href="mailto:harrisonhe.01150@gmail.com" class="btn btn-primary btn-large" data-i18n="contact.cta">Say Hello</a>
             </div>
         </div>
     </section>
 
 
     <!-- Qing AI Floating Button -->
-    <div class="qing-float-btn" id="qing-float-btn" title="Talk to 青 (AI)" role="button" tabindex="0" aria-label="Talk to 青, the AI land spirit">
-        <div class="qing-tooltip" id="qing-tooltip">I'm the Land Spirit. Need help?</div>
+    <div class="qing-float-btn" id="qing-float-btn" title="Talk to 青 (AI)" role="button" tabindex="0" aria-label="Talk to 青, the AI land spirit" data-i18n-title="qing.title" data-i18n-aria="qing.aria">
+        <div class="qing-tooltip" id="qing-tooltip" data-i18n="qing.tooltip">I'm the Land Spirit. Need help?</div>
         <div class="qing-notif-dot" id="qing-notif-dot"></div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="30" height="30">
             <text x="50" y="70" text-anchor="middle">青</text>
@@ -308,7 +337,7 @@
     <!-- Qing AI Modal -->
     <div class="qing-modal-overlay" id="qing-modal-overlay">
         <div class="qing-modal-content">
-            <div class="qing-modal-close" id="qing-modal-close" role="button" tabindex="0" aria-label="Close chat">&times;</div>
+            <div class="qing-modal-close" id="qing-modal-close" role="button" tabindex="0" aria-label="Close chat" data-i18n-aria="qing.close">&times;</div>
             <iframe data-src="qing.html" class="qing-modal-iframe" id="qing-iframe" title="Chat with 青"></iframe>
         </div>
     </div>
@@ -316,11 +345,12 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; <span id="footer-year">2026</span> Harrison He. All rights reserved.</p>
+            <p data-i18n="footer.text">&copy; <span id="footer-year">2026</span> Harrison He. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="js/script.js?v=2"></script>
+    <script src="js/i18n.js?v=1"></script>
     <script>
         // Qing AI Modal Logic
         const qingBtn = document.getElementById('qing-float-btn');
