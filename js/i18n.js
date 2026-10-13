@@ -87,8 +87,8 @@
     const STORAGE_KEY = 'lang';
     let saved = null;
     try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { /* storage blocked: stay in memory */ }
-    const browserZh = (navigator.language || '').toLowerCase().startsWith('zh');
-    let lang = saved || (browserZh ? 'zh' : 'en');
+    // Default is English; Chinese only when the visitor picked it earlier (remembered in localStorage).
+    let lang = saved === 'zh' ? 'zh' : 'en';
 
     function cacheEnglish() {
         document.querySelectorAll('[data-i18n]').forEach(el => {
