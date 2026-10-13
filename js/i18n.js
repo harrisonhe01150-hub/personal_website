@@ -57,7 +57,7 @@
     "ach.ai.feishu": "2026 AI 先锋未来人才大赛（飞书 / 字节跳动联合北大、复旦、中大、西交共建；109 道企业命题）——以店小力单人参赛，入围度小满和钛动两道企业命题，并在企业教练指导下分别完成部署和演示（2026 年 7–8 月）。",
     "ach.ai.loreal": "欧莱雅第二届美妆科技黑客松（阿里天池）——组队参赛，内容真实性赛道；负责裁决流程、Agent、网页端和图像取证。",
     "ach.ai.unity": "2026 Unity 开发挑战赛（Codely+ 赛道）——团队游戏《余数 / REMAINDER》；负责游戏运行平台和各模块整合。",
-    "ach.ai.gosim": "GOSIM 智能体巡天黑客松 2026 —— 作品进行中。",
+    "ach.ai.gosim": "GOSIM 智能体巡天黑客松 2026 —— 102 支队伍中排名第 15（隐藏决赛卡平均 29,605 分，主办方进阶示例 27,101 分）。用 Rust 写的智能体：每季在 900 秒 CPU 时间内跑完模拟望远镜巡天，并读懂多语言、部分加密的值班日志，提前应对故障和关闭。<a href=\"https://github.com/harrisonhe01150-hub/gosim-survey26-agent\" target=\"_blank\" rel=\"noopener\" style=\"color: var(--accent-mist); border-bottom: 1px solid rgba(205,213,220,0.35); white-space: nowrap;\">GitHub 代码 →</a>",
     "ach.math.title": "🏆 数学竞赛",
     "ach.math.samo": "南非数学奥林匹克 — 第 4 名（2021）、第 7 名（2022）、前 50（2023）、前 20（2024）、前 20（2025）",
     "ach.math.wits": "威特沃特斯兰德大学数学竞赛前 10 — 2023 至 2025（洲际级别）",
