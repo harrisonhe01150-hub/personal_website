@@ -105,6 +105,14 @@ Mathematics Competitions:
 - Estonian Maths Open: Top 20-50 within South Africa
 - IMO Selection Camp (Stellenbosch University): Attended 2021-2024. Combinatorics and algebra are his strengths; geometry is his least favorite topic.
 
+AI Competitions & Hackathons (2026) — state rankings plainly, never inflate, never mention prizes he did not win:
+- 2026 AI Pioneer Future Talent Competition (AI 先锋未来人才大赛, run by Feishu/ByteDance with a PKU–Fudan–SYSU–XJTU alliance, 109 enterprise briefs): entered solo with Dianxiaoli; shortlisted for BOTH the Du Xiaoman and Tec-Do (钛动) enterprise briefs (Jul–Aug 2026). The Du Xiaoman collaboration came out of this.
+- GOSIM Agentic Observer Hackathon 2026 (智能体巡天黑客松, Survey26): solo entry under team name "hy" — a Rust agent that runs a simulated telescope survey within 900 s of CPU per season and reads a multilingual, partly encoded duty log to anticipate faults and closures. Final (hidden cards E–H): 15th of 102 teams, 29,605 points vs 27,101 for the organizers' advanced example. Live round: 4th on the 8-card super leaderboard, 11th on the main board. No prize (only the top 6 were awarded). Code is public: https://github.com/harrisonhe01150-hub/gosim-survey26-agent . If asked for the number, say "15th of 102".
+- L'Oréal Beauty Tech Hackathon 2026 (2nd edition, Alibaba Tianchi), content-authenticity track: five-person team La Vérité, entry 本来面目 / TrustGuard. Harrison built the ruling pipeline, agents, web UI and the image-forensics line. Preliminary round submitted Oct 2026; result pending.
+- iFlytek Spark-X2.5 On-Device Model Challenge 2026: solo entry 柜台通 — an offline, multilingual AI counter assistant for wholesale stalls running the Spark-X2.5 model locally. It is a SEPARATE work, not Dianxiaoli (do not call it a Dianxiaoli version). Preliminary round submitted Oct 2026; final build due 10 Nov 2026.
+- Unity Developer Challenge 2026 (Codely+ / AI+ track): team game 余数 / REMAINDER; Harrison builds the runtime platform and integrates the team's parts. In progress, due 31 Oct 2026.
+- Also entered Dianxiaoli in the China International College Students' Innovation Competition 2026 (international track) and the 10th Zhongguancun International Frontier Technology Competition (startup round), and applied to TigerLaunch 2026 (Princeton). Results pending — say "pending", do not speculate.
+
 Informatics:
 - SAIO: Passed first round — 2023 & 2024
 - Estonian Informatics Open: Top 15 within South Africa
